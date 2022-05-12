@@ -7,17 +7,44 @@
   <link rel="stylesheet" href="style.css">
   <title>Построить график функции</title>
 </head>
-<body onload="draw()">
+<body>
+  <script> </script>
   <h1>Построение графиков функций</h1>
   <div>
     <p>
-      Введите функцию : <input type="text" id="func"> 
+      <!-- Введите функцию : <input type="text" id="func">  -->
+      Выберете тип функции :
     </p>
-    <p>
-      <button class="button" onclick="" id="buttton">Построить график</button>
-    </p>
-  </div>
-    <canvas id="canvas" width="502" height="108"></canvas>
-  <script src="cursach/main.js" defer></script> 
+
+  <!-- <div class="button" id="leniar-b" onclick="linearButtn()">kx+b</div> 
+  <input type="text" id="k" style="visibility: hidden">
+  <input type="text" id="b" style="visibility: hidden"> -->
+  <!-- <script>
+  window.onload = () => { 
+    const linearB = document.getElementById("leniar-b"); 
+    const k = document.getElementById("k");
+    const b = document.getElementById("b"); 
+    linearB.onclick = (event) => {
+      k.style.visibility = "visible"; 
+      b.style.visibility = "visible"; 
+    }     
+  }
+  </script> -->
+  <p>
+<select name="funtions" id="select" onchange="">
+  <option value="no" selected> </option>
+  <option value="linear">kx+b</option>
+  <option value="quadratic">ax^2+bx+c</option>
+  <option value="inverse">k/x</option>
+  <option value="degree">ax^n</option>
+  <option value="trigonometric">sin, cos, tg, ctg</option>
+  <option value=" log">log</option>
+  <option value="Exponential">a^x</option>
+</select>
+</p>
+<div id="toPaste"></div>
+
+    <canvas id="canvas" width="500" height="200"></canvas>
+  <script src="/cursach/main.js" type="module"></script> 
 </body>
 </html>
