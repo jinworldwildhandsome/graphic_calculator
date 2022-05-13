@@ -28,10 +28,10 @@ const addCoefficient = (selected) =>{
         <div id="pasted">
             <form action="">
                 <p>k = 
-                    <input type="number" id="k1">
+                    <input type="number" id="kLin">
                 </p>
                 <p>b = 
-                    <input type="number" id="b1">
+                    <input type="number" id="bLin">
                 </p>
             </form>
         </div>
@@ -44,13 +44,13 @@ const addCoefficient = (selected) =>{
         <div id="pasted">
             <form action="">
                 <p>a =
-                    <input type="number" id="a1">
+                    <input type="number" id="aQuad">
                 </p>
                 <p>b = 
-                    <input type="number" id="b2">
+                    <input type="number" id="bQuad">
                 </p>
                 <p>c = 
-                    <input type="number" id="c">
+                    <input type="number" id="cQuad">
                 </p>
             </form>
         </div>
@@ -63,10 +63,10 @@ const addCoefficient = (selected) =>{
         <div id="pasted">
             <form action="">
                 <p>k =
-                    <input type="number" id="k2">
+                    <input type="number" id="kInverse">
                 </p>
                 <p>b = 
-                    <input type="number" id="b2">
+                    <input type="number" id="bInverse">
                 </p>
             </form>
         </div>
@@ -79,13 +79,13 @@ const addCoefficient = (selected) =>{
         <div id="pasted">
             <form action="">
             <p>a =
-                    <input type="number" id="a3">
+                    <input type="number" id="aDegree">
                 </p>
                 <p>k =
-                    <input type="number" id="k3">
+                    <input type="number" id="kDegree">
                 </p>
                 <p>b = 
-                    <input type="number" id="b3">
+                    <input type="number" id="bDegree">
                 </p>
             </form>
         </div>
@@ -113,13 +113,13 @@ const addCoefficient = (selected) =>{
         <div id="pasted">
             <form action="">
             <p>a =
-                    <input type="number" id="a4">
+                    <input type="number" id="aLog">
                 </p>
                 <p>k =
-                    <input type="number" id="k4">
+                    <input type="number" id="kLog">
                 </p>
                 <p>b = 
-                    <input type="number" id="b4">
+                    <input type="number" id="bLog">
                 </p>
             </form>
         </div>
@@ -132,13 +132,13 @@ const addCoefficient = (selected) =>{
         <div id="pasted">
             <form action="">
             <p>a =
-                    <input type="number" id="a5">
+                    <input type="number" id="aExponent">
                 </p>
                 <p>k =
-                    <input type="number" id="k5">
+                    <input type="number" id="kExponent">
                 </p>
                 <p>b = 
-                    <input type="number" id="b5">
+                    <input type="number" id="bExponent">
                 </p>
             </form>
         </div>
@@ -151,6 +151,8 @@ const addChanges = () =>{
     let sel = document.getElementById("select"); 
     addCoefficient(sel); 
 }; 
+
+module.exports = [addCoefficient, addChanges]; 
     
 
     const axes = {
