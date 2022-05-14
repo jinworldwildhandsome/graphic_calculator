@@ -1,41 +1,50 @@
 "use strict"; 
 
-const modul = require('./main.js'); 
+const main = require('./main.js'); 
+const canvas = document.getElementById("canvas"); 
+const ctx = canvas.getContext("2d"); 
+const maxX =  0.5*canvas.width; 
+const maxY =  0.5*canvas.height; 
+const difference = 0.1; 
 
-const receiveCoeff = {
-    "linear": () =>{
-        k = document.getElementById("kLin").value;
-        b = document.getElementById("bLin").value; 
-        return { a, k, b}; 
+const calculateCoord = (coefficients, type, x) =>{
+    const calculate = calculators[type]; 
+    const calculatedY = calculate(coefficients, x); 
+    return calculatedY; 
+}; 
+const calculators = {
+    linear: (coefficients, x) =>{
+       let y = coefficients.k*x+coefficients.b; 
+        return y; 
     }, 
-    "quadratic": () =>{
-        a = document.getElementById("aQuard").value;
-        b = document.getElementById("bQuard").value; 
-        c = document.getElementById("cQuard").value; 
-        return{ a, b, c}
+    quadratic: (coefficients, x) =>{
+        let y = coefficients.a*x*x+coefficients.b*x+coefficients.c; 
+        return y; 
     },
-    "inverse": () =>{
-        k = document.getElementById("kInverse").value;
-        b = document.getElementById("bInverse").value; 
-        return { k, b}; 
+    inverse: (coefficients, x) =>{
+        if( x == 0) return; 
+        let y = coefficients.k/x + coefficients.b;  
+        return y; 
     },
-    "log": () =>{
-        a = document.getElementById("aLog").value;
-        b = document.getElementById("bLog").value; 
-        k = document.getElementById("kLog").value;
-        return { a, k, b}; 
+    log: (coefficients, x) =>{
+        if( x <= 0 || a <= 0 ) return; 
+        let y = Math.log(x)/Math.log(coefficients.a) + coefficients.b; 
+        return y; 
     },
-    "exponential": () =>{
-        a = document.getElementById("aExponent").value;
-        k = document.getElementById("kExponent").value;
-        b = document.getElementById("bExponent").value; 
-        return {a, k, b}; 
+    exponential: (coefficients, x) =>{
+        let y = Math.exp(x)*coefficients.k + coefficients.b;  
+        return y; 
     },
-    "degree": () =>{
-        a = document.getElementById("aDegree").value;
-        k = document.getElementById("kDegree").value;
-        b = document.getElementById("bDegree").value; 
-        return { a, k, b}; 
-    }, 
-}
+    degree: (coefficients, x) =>{
+        let y = Math.pow(coefficients.a, x)*coefficients.k + coefficients.b; 
+        return y; 
+    },
+
+}; 
+ 
+
+
+
+
+
 

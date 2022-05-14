@@ -1,20 +1,5 @@
 "use strict";
 
-// window.onload = () => {
-     const canvas = document.getElementById("canvas"); 
-     const ctx = canvas.getContext("2d"); 
-//     const liner = document.getElementById("leniar-b"); 
-//     const k = document.getElementById("k"); 
-//     const b =  document.getElementById("b");  
-
-
-//     liner.linearButtn =  () => {
-//         k.style.visibility = "visible"; 
-//         b.style.visibility = "visible"; 
-//     }
-//}
- 
-//const modul = require('./functions.js'); 
 const addButton = (place) =>{
     let button = document.createElement("button"); 
     button.innerHTML =`
@@ -163,14 +148,14 @@ const addChanges = () =>{
 const getCoeff = () =>{
     const selected = document.getElementById("select").value; 
     const func = receiveCoeff[selected]; 
-    func();   
+    const result = func();   
+    return result; 
 }
 
 const receiveCoeff = {
     linear: () =>{
         const k = document.getElementById("kLin").value;
         const b = document.getElementById("bLin").value; 
-        alert(k, b); 
         return { k, b}; 
     }, 
     quadratic: () =>{
