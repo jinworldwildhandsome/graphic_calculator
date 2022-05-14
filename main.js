@@ -1,8 +1,8 @@
 "use strict";
 
 // window.onload = () => {
-//     const canvas = document.getElementById("canvas"); 
-//     const ctx = canvas.getContext("2d"); 
+     const canvas = document.getElementById("canvas"); 
+     const ctx = canvas.getContext("2d"); 
 //     const liner = document.getElementById("leniar-b"); 
 //     const k = document.getElementById("k"); 
 //     const b =  document.getElementById("b");  
@@ -14,6 +14,14 @@
 //     }
 //}
  
+//const modul = require('./functions.js'); 
+const addButton = (place) =>{
+    let button = document.createElement("button"); 
+    button.innerHTML =`
+    <button id="buildGrapf" onclick="">Построить график</button>
+    `; 
+    place.append(button); 
+}; 
 
 const addCoefficient = (selected) =>{
     let toPaste = document.getElementById("toPaste"); 
@@ -36,7 +44,7 @@ const addCoefficient = (selected) =>{
             </form>
         </div>
         `; 
-        toPaste.append(form); 
+        toPaste.append(form);  
     }
     if( selectedValue =="quadratic" ){
         let form = document.createElement('div');
@@ -145,15 +153,56 @@ const addCoefficient = (selected) =>{
         `; 
         toPaste.append(form);  
     }
+    addButton(toPaste); 
 }; 
 
 const addChanges = () =>{
     let sel = document.getElementById("select"); 
     addCoefficient(sel); 
 }; 
+const getCoeff = () =>{
+    const selected = document.getElementById("select").value; 
+    const func = receiveCoeff[selected]; 
+    func();   
+}
 
-module.exports = [addCoefficient, addChanges]; 
-    
+const receiveCoeff = {
+    linear: () =>{
+        const k = document.getElementById("kLin").value;
+        const b = document.getElementById("bLin").value; 
+        alert(k, b); 
+        return { k, b}; 
+    }, 
+    quadratic: () =>{
+        const a = document.getElementById("aQuard").value;
+        const b = document.getElementById("bQuard").value; 
+        const c = document.getElementById("cQuard").value; 
+        return{ a, b, c}
+    },
+    inverse: () =>{
+        const k = document.getElementById("kInverse").value;
+        const b = document.getElementById("bInverse").value; 
+        return { k, b}; 
+    },
+    log: () =>{
+        const a = document.getElementById("aLog").value;
+        const b = document.getElementById("bLog").value; 
+        const k = document.getElementById("kLog").value;
+        return { a, k, b}; 
+    },
+    exponential: () =>{
+        const a = document.getElementById("aExponent").value;
+        const k = document.getElementById("kExponent").value;
+        const b = document.getElementById("bExponent").value; 
+        return {a, k, b}; 
+    },
+    degree: () =>{
+        const a = document.getElementById("aDegree").value;
+        const k = document.getElementById("kDegree").value;
+        const b = document.getElementById("bDegree").value; 
+        return { a, k, b}; 
+    }, 
+} 
 
     const axes = {
         x0 : 0.5*canvas.width,
