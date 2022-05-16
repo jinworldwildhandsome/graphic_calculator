@@ -1,11 +1,13 @@
 "use strict";
 
-const addButton = (place) =>{
-    let button = document.createElement("div"); 
-    button.innerHTML =`
-    <button id="buildGrapf" onclick="draw()">Построить график</button>
-    `; 
-    place.append(button); 
+const addButton = (/*place*/) =>{
+    //let button = document.createElement("div"); 
+    //button.innerHTML =`
+    //<button id="buildGrapf" onclick="draw()">Построить график</button>
+    //`; 
+    //place.append(button); 
+    const button = document.getElementById("buildGrapf"); 
+    button.style.visibility = "visible"; 
 }; 
 
 const addCoefficient = (selected) =>{
@@ -138,7 +140,7 @@ const addCoefficient = (selected) =>{
         `; 
         toPaste.append(form);  
     }
-    addButton(toPaste); 
+    addButton(/*toPaste*/); 
 }; 
 
 const addChanges = () =>{

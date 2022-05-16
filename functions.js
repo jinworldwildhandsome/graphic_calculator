@@ -1,11 +1,10 @@
 "use strict"; 
 
 const main = require('./main.js'); 
-const canvas = document.getElementById('canvas'); 
+const canvas = document.getElementById('Mycanvas'); 
 const ctx = canvas.getContext('2d'); 
 const difference = 0.1; 
 const point = 2; 
-
 const draw = () =>{
     axes.drawAxes(); 
     let x = 0; 
