@@ -203,7 +203,10 @@ const draw = () =>{
     drawAxes(); 
     //let xStart = 0;  
     const coefficients = getCoeff(); 
-    const typeGraph = document.getElementById("select").value;
+    let typeGraph = document.getElementById("select").value; 
+    if( typeGraph == trigonometric ){
+        typeGraph = document.getElementById("trigonom"); 
+    }
     ctx.beginPath(); 
     for(  let x = 0;  x <= axes.x0; x += difference){
         /*setTimeout(*/build(x, coefficients, typeGraph)/*, 2000)*/ ; 
