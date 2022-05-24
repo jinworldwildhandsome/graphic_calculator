@@ -161,9 +161,9 @@ const receiveCoeff = {
         return { k, b}; 
     }, 
     quadratic: () =>{
-        const a = document.getElementById("aQuard").value;
-        const b = document.getElementById("bQuard").value; 
-        const c = document.getElementById("cQuard").value; 
+        const a = document.getElementById("aQuad").value;
+        const b = document.getElementById("bQuad").value; 
+        const c = document.getElementById("cQuad").value; 
         return{ a, b, c}
     },
     inverse: () =>{
@@ -191,5 +191,100 @@ const receiveCoeff = {
     }, 
 } 
 
+const canvas = document.getElementById('Mycanvas'); 
+const ctx = canvas.getContext('2d'); 
+const difference = 0.1; 
+const draw = () =>{
+    clearCanvas(); 
+    drawAxes(); 
+    //let xStart = 0;  
+    const coefficients = getCoeff(); 
+    const typeGraph = document.getElementById("select").value;
+    ctx.beginPath(); 
+    
+}; 
 
+const clearCanvas = () => {
+    ctx.clearRect( 0, 0, axes.xmax, axes.ymax); 
+}; 
+
+const build = (coordX, coeffs, type) =>{
+    if( coordX <= axes.x0 ){
+        let y = axes.y0 - calculateCoord(coeffs, type, coordX);
+        let x =  axes.x0+coordX; 
+
+        /*if( y < 0){
+            doNegative( coordX, y); 
+        }else{
+            doPositive( coordX, y); 
+        }*/
+        //drawGrapf( coordX+axes.x0, axes.y0-y);  
+        setTimeout(  drawGrapf( x/*axes.x0+coordX*/, /*axes.y0-*/y ), 2000); 
+        //build( coordX+difference, coeffs, type);
+        //build( coordX-difference, coeffs, type); 
+
+    }; 
+}
+ 
+const drawGrapf = (x, y) =>{
+    if( x == axes.x0){
+       // ctx.beginPath();
+        ctx.moveTo(x, y); 
+        console.log(x +' '+ y); 
+    } else{
+        ctx.lineTo(x, y); 
+    }
+    ctx.stroke(); 
+}
+
+const axes = {
+    x0 : 0.5*canvas.width,
+    y0 : 0.5*canvas.height,
+    xmax : canvas.width, 
+    ymax : canvas.height,
+}; 
+
+const drawAxes = () => {
+    ctx.beginPath(); 
+    ctx.moveTo(axes.x0, 0); 
+    ctx.lineTo(axes.x0, axes.ymax); 
+    ctx.moveTo(0, axes.y0); 
+    ctx.lineTo(axes.xmax, axes.y0);  
+    ctx.stroke(); 
+}; 
+
+const calculateCoord = (coefficients, type, x) =>{
+    //const calculate = calculators[type]; 
+    const calculatedY = calculators[type](coefficients, x); 
+    return calculatedY; 
+}; 
+const calculators = {
+    linear: (coefficients, x) =>{
+       let y = coefficients.k*x+coefficients.b; 
+        return y; 
+    }, 
+    quadratic: (coefficients, x) =>{
+        let y = coefficients.a*x*x+coefficients.b*x+coefficients.c; 
+        return y; 
+    },
+    inverse: (coefficients, x) =>{
+        if( x == 0) return; 
+        let y = coefficients.k/x + coefficients.b;  
+        return y; 
+    },
+    log: (coefficients, x) =>{
+        if( x <= 0 || coefficients.a <= 0 ) return; 
+        let y = Math.log(x)/Math.log(coefficients.a) + coefficients.b; 
+        return y; 
+    },
+    exponential: (coefficients, x) =>{
+        let y = Math.exp(x)*coefficients.k + coefficients.b;  
+        return y; 
+    },
+    degree: (coefficients, x) =>{
+        let y = Math.pow(coefficients.a, x)*coefficients.k + coefficients.b; 
+        return y; 
+    },
+
+}; 
  
