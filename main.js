@@ -201,7 +201,13 @@ const draw = () =>{
     const coefficients = getCoeff(); 
     const typeGraph = document.getElementById("select").value;
     ctx.beginPath(); 
-    
+    for(  let x = 0;  x <= axes.x0; x += difference){
+        /*setTimeout(*/build(x, coefficients, typeGraph)/*, 2000)*/ ; 
+        console.log(x);   
+    }; 
+    // for( let x = 0; x !== -(axes.x0+difference); x-= difference){
+    //     /*setTimeout(*/build(x, coefficients, typeGraph)/*, 2000)*/ ; 
+    // }; 
 }; 
 
 const clearCanvas = () => {
