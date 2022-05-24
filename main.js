@@ -189,6 +189,10 @@ const receiveCoeff = {
         const b = document.getElementById("bDegree").value; 
         return { a, k, b}; 
     }, 
+    trigonom: () =>{
+
+    }
+
 } 
 
 const canvas = document.getElementById('Mycanvas'); 
@@ -243,6 +247,7 @@ const drawGrapf = (x, y) =>{
     ctx.stroke(); 
 }
 
+
 const axes = {
     x0 : 0.5*canvas.width,
     y0 : 0.5*canvas.height,
@@ -290,7 +295,25 @@ const calculators = {
     degree: (coefficients, x) =>{
         let y = Math.pow(coefficients.a, x)*coefficients.k + coefficients.b; 
         return y; 
-    },
+    }, 
+    sin: (x) =>{
+        let y = Math.sin(x); 
+        return y; 
+    }, 
+    cos: (x) => {
+        let y = Math.cos(x); 
+        return y; 
+    }, 
+    tg: () =>{
+        let y = Math.tan(x); 
+        return y; 
+    }, 
+    ctg: (x) =>{
+        if( Math.tan(x) !== 0){
+            let y = 1/(Math.tan(x)); 
+            return y; 
+        }
+    }
 
 }; 
  
