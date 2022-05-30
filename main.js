@@ -200,9 +200,12 @@ const draw = () =>{
         type = document.getElementById("trigonom"); 
     } 
     ctx.beginPath(); 
-    for(  let x = 0;  x <= axes.x0; x += difference){
-         build(x, coefficients, type);   
-    };  
+    // for(  let x = 0;  x <= axes.x0; x += difference){
+    //      build(x, coefficients, type);   
+    // };   
+    for( let x = -axes.x0; x <= axes.x0; x += difference){
+        build(x, coefficients, type); 
+    }
 }; 
 const clearCanvas = () => {
     ctx.clearRect( 0, 0, axes.xmax, axes.ymax); 
@@ -221,7 +224,7 @@ const drawGrapf = (x, y) =>{
         ctx.lineTo(x, y); 
     }
     ctx.stroke(); 
-    }, 2000
+    }, 1000
    ); 
 }
 const axes = {
