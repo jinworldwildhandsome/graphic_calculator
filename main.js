@@ -1,11 +1,6 @@
 "use strict";
 
-const addButton = (/*place*/) =>{
-    //let button = document.createElement("div"); 
-    //button.innerHTML =`
-    //<button id="buildGrapf" onclick="draw()">Построить график</button>
-    //`; 
-    //place.append(button); 
+const addButton = () =>{
     const button = document.getElementById("buildGrapf"); 
     button.style.visibility = "visible"; 
 }; 
@@ -140,19 +135,18 @@ const addCoefficient = (selected) =>{
         `; 
         toPaste.append(form);  
     }
-    addButton(/*toPaste*/); 
+    addButton(); 
 }; 
 
 const addChanges = () =>{
-    let sel = document.getElementById("select"); 
-    addCoefficient(sel); 
+    let selected = document.getElementById("select"); 
+    addCoefficient(selected); 
 }; 
 const getCoeff = () =>{
-    const selected = document.getElementById("select").value; 
-    const func = receiveCoeff[selected]; 
-    const result = func();   
+    const selectedValue = document.getElementById("select").value; 
+    const result = receiveCoeff[selectedValue]();   
     return result; 
-}
+}; 
 
 const receiveCoeff = {
     linear: () =>{
@@ -190,10 +184,9 @@ const receiveCoeff = {
         return { a, k, b}; 
     }, 
     trigonom: () =>{
-
-    }
-
-} 
+        return {}; 
+    },
+}; 
 
 const canvas = document.getElementById('Mycanvas'); 
 const ctx = canvas.getContext('2d'); 
@@ -201,63 +194,42 @@ const difference = 0.1;
 const draw = () =>{
     clearCanvas(); 
     drawAxes(); 
-    //let xStart = 0;  
     const coefficients = getCoeff(); 
-    let typeGraph = document.getElementById("select").value; 
-    if( typeGraph == trigonometric ){
-        typeGraph = document.getElementById("trigonom"); 
-    }
+    let type = document.getElementById("select").value; 
+    if( type == "trigonometric" ){
+        type = document.getElementById("trigonom"); 
+    } 
     ctx.beginPath(); 
     for(  let x = 0;  x <= axes.x0; x += difference){
-        /*setTimeout(*/build(x, coefficients, typeGraph)/*, 2000)*/ ; 
-        console.log(x);   
-    }; 
-    // for( let x = 0; x !== -(axes.x0+difference); x-= difference){
-    //     /*setTimeout(*/build(x, coefficients, typeGraph)/*, 2000)*/ ; 
-    // }; 
+         build(x, coefficients, type);   
+    };  
 }; 
-
 const clearCanvas = () => {
     ctx.clearRect( 0, 0, axes.xmax, axes.ymax); 
 }; 
-
-const build = (coordX, coeffs, type) =>{
-    if( coordX <= axes.x0 ){
-        let y = axes.y0 - calculateCoord(coeffs, type, coordX);
+async function build (coordX, coefficientss, type) {
+        let y = axes.y0 - calculateCoord(coefficientss, type, coordX);
         let x =  axes.x0+coordX; 
-
-        /*if( y < 0){
-            doNegative( coordX, y); 
-        }else{
-            doPositive( coordX, y); 
-        }*/
-        //drawGrapf( coordX+axes.x0, axes.y0-y);  
-        setTimeout(  drawGrapf( x/*axes.x0+coordX*/, /*axes.y0-*/y ), 2000); 
-        //build( coordX+difference, coeffs, type);
-        //build( coordX-difference, coeffs, type); 
-
-    }; 
+        drawGrapf( x, y ), 1000; 
 }
- 
 const drawGrapf = (x, y) =>{
+   setTimeout( () =>{
     if( x == axes.x0){
        // ctx.beginPath();
         ctx.moveTo(x, y); 
-        console.log(x +' '+ y); 
     } else{
         ctx.lineTo(x, y); 
     }
     ctx.stroke(); 
+    }, 2000
+   ); 
 }
-
-
 const axes = {
     x0 : 0.5*canvas.width,
     y0 : 0.5*canvas.height,
     xmax : canvas.width, 
     ymax : canvas.height,
 }; 
-
 const drawAxes = () => {
     ctx.beginPath(); 
     ctx.moveTo(axes.x0, 0); 
@@ -266,9 +238,7 @@ const drawAxes = () => {
     ctx.lineTo(axes.xmax, axes.y0);  
     ctx.stroke(); 
 }; 
-
 const calculateCoord = (coefficients, type, x) =>{
-    //const calculate = calculators[type]; 
     const calculatedY = calculators[type](coefficients, x); 
     return calculatedY; 
 }; 
