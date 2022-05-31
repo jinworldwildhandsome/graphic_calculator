@@ -137,8 +137,8 @@ const addChanges = () =>{
     button.style.visibility = "visible"; 
     const grapfColor = document.getElementById("grapfColor"); 
     grapfColor.style.visibility = "visible"; 
-    const backgroundColor = document.getElementById("backgroundColor"); 
-    backgroundColor.style.visibility = "visible"; 
+    const thickness = document.getElementById("thickness"); 
+    thickness.style.visibility = "visible"; 
     let selected = document.getElementById("select"); 
     addCoefficient(selected); 
 }; 
@@ -198,22 +198,26 @@ const draw = () =>{
     const coefficients = getCoeff(); 
     let type = document.getElementById("select").value; 
     if( type == "trigonometric" ){
-        type = document.getElementById("trigonom"); 
+        type = document.getElementById("trigonom").value; 
     } 
-    ctx.beginPath();    
+    ctx.beginPath();  
+    ctx.strokeStyle = document.getElementById("grapfColor").value; 
+    ctx.lineWidth = document.getElementById("thickness").value;   
     for( let x = -axes.x0; x <= axes.x0; x += difference){
         build(x, coefficients, type); 
     }
 }; 
 const clearCanvas = () => {
     ctx.clearRect( 0, 0, axes.xmax, axes.ymax); 
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1; 
 }; 
 async function build (coordX, coefficientss, type) {
         let y = axes.y0 - calculateCoord(coefficientss, type, coordX);
         let x =  axes.x0+coordX; 
-        drawGrapf( x, y ), 1000; 
+        drawGrapf( x, y ); 
 }
-const drawGrapf = (x, y) =>{
+const drawGrapf = (x, y) =>{ 
    setTimeout( () =>{
     if( x == axes.x0){
         ctx.moveTo(x, y); 
@@ -231,7 +235,7 @@ const axes = {
     ymax : canvas.height,
 }; 
 const drawAxes = () => {
-    ctx.beginPath(); 
+    ctx.beginPath();   
     ctx.moveTo(axes.x0, 0); 
     ctx.lineTo(axes.x0, axes.ymax); 
     ctx.moveTo(0, axes.y0); 
