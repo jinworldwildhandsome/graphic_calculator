@@ -1,10 +1,5 @@
 "use strict";
 
-const addButton = () =>{
-    const button = document.getElementById("buildGrapf"); 
-    button.style.visibility = "visible"; 
-}; 
-
 const addCoefficient = (selected) =>{
     let toPaste = document.getElementById("toPaste"); 
     let toDelete = document.getElementById("pasted");
@@ -135,10 +130,15 @@ const addCoefficient = (selected) =>{
         `; 
         toPaste.append(form);  
     }
-    addButton(); 
 }; 
 
 const addChanges = () =>{
+    const button = document.getElementById("buildGrapf"); 
+    button.style.visibility = "visible"; 
+    const grapfColor = document.getElementById("grapfColor"); 
+    grapfColor.style.visibility = "visible"; 
+    const backgroundColor = document.getElementById("backgroundColor"); 
+    backgroundColor.style.visibility = "visible"; 
     let selected = document.getElementById("select"); 
     addCoefficient(selected); 
 }; 
@@ -191,7 +191,8 @@ const receiveCoeff = {
 const canvas = document.getElementById('Mycanvas'); 
 const ctx = canvas.getContext('2d'); 
 const difference = 0.1; 
-const draw = () =>{
+const draw = () =>{ 
+    canvas.style.visibility = "visible"; 
     clearCanvas(); 
     drawAxes(); 
     const coefficients = getCoeff(); 
@@ -199,10 +200,7 @@ const draw = () =>{
     if( type == "trigonometric" ){
         type = document.getElementById("trigonom"); 
     } 
-    ctx.beginPath(); 
-    // for(  let x = 0;  x <= axes.x0; x += difference){
-    //      build(x, coefficients, type);   
-    // };   
+    ctx.beginPath();    
     for( let x = -axes.x0; x <= axes.x0; x += difference){
         build(x, coefficients, type); 
     }
@@ -218,7 +216,6 @@ async function build (coordX, coefficientss, type) {
 const drawGrapf = (x, y) =>{
    setTimeout( () =>{
     if( x == axes.x0){
-       // ctx.beginPath();
         ctx.moveTo(x, y); 
     } else{
         ctx.lineTo(x, y); 

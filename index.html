@@ -8,13 +8,12 @@
   <title>Построить график функции</title>
 </head>
 <body>
-  <h1>Построение графиков функций</h1>
+  <h1><center>Построение графиков функций</center></h1>
   <div>
     <p>
       Выберете тип функции :
     </p>
-  <p>
-<select name="funtions" id="select" onchange="addChanges()">
+<section><select name="funtions" id="select" onchange="addChanges()">
   <option value="no" selected> </option>
   <option value="linear">kx+b</option>
   <option value="quadratic">ax^2+bx+c</option>
@@ -24,13 +23,14 @@
   <option value="log">klog(x)+b</option>
   <option value="exponential">ka^x+b</option>
 </select>
-</p>
+</section> 
 <div id="toPaste"> </div>
-<button id="buildGrapf" onclick="draw()" style="visibility: hidden">Построить график</button>
-<canvas id="Mycanvas" width="500" height="200"></canvas>
-    
- 
- 
+<div>
+  <input type="color" name="grapfColor" id="grapfColor"  style="visibility: hidden">
+  <input type="color" name="bg" id="backgroundColor"  style="visibility: hidden">
+</div> 
+<button id="buildGrapf" onclick="draw()" style="visibility: hidden">Построить график</button> 
+<canvas id="Mycanvas" width="500" height="200" style="visibility: hidden"></canvas>
 <script src="functions.js" ></script> 
 <script src="main.js" ></script> 
 </body>
