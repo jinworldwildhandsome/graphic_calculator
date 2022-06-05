@@ -1,5 +1,5 @@
 "use strict";
-
+//import { addCoefficient, calculators, receiveCoeff} from './functions.js'; 
 const addCoefficient = (selected) =>{
     let toPaste = document.getElementById("toPaste"); 
     let toDelete = document.getElementById("pasted");
@@ -7,8 +7,8 @@ const addCoefficient = (selected) =>{
     if( toDelete !== null ){
         toDelete.remove(); 
       }
+    let form = document.createElement('div');
     if( selectedValue =="linear" ){
-        let form = document.createElement('div');
         form.innerHTML = `
         <div id="pasted">
             <form action="">
@@ -20,11 +20,9 @@ const addCoefficient = (selected) =>{
                 </p>
             </form>
         </div>
-        `; 
-        toPaste.append(form);  
+        `;   
     }
     if( selectedValue =="quadratic" ){
-        let form = document.createElement('div');
         form.innerHTML = `
         <div id="pasted">
             <form action="">
@@ -40,10 +38,8 @@ const addCoefficient = (selected) =>{
             </form>
         </div>
         `; 
-        toPaste.append(form); 
     }
     if( selectedValue =="inverse" ){
-        let form = document.createElement('div');
         form.innerHTML = `
         <div id="pasted">
             <form action="">
@@ -56,10 +52,8 @@ const addCoefficient = (selected) =>{
             </form>
         </div>
         `; 
-        toPaste.append(form); 
     }
     if( selectedValue =="degree" ){
-        let form = document.createElement('div');
         form.innerHTML = `
         <div id="pasted">
             <form action="">
@@ -74,26 +68,33 @@ const addCoefficient = (selected) =>{
                 </p>
             </form>
         </div>
-        `; 
-        toPaste.append(form);  
+        `;  
     }
     if( selectedValue =="trigonometric" ){
-        let form = document.createElement('div');
         form.innerHTML = `
         <div id="pasted">
             <form action="">
-            <select name="trigonom" id="trigonom" onchange="">
-                <option value="sin" selected>sin(x)</option>
-                <option value="cos">cos(x)</option>
-                <option value="tg">tg(x)</option>
-                <option value="ctg">ctg(x)</option>
+            <select name="trigonom" id="trigonometricType" onchange="">
+                <option value="k*sin(b*x)" selected>sin(x)</option>
+                <option value="k*cos(b*x)">cos(x)</option>
+                <option value="k*(tg(b*x)">tg(x)</option>
+                <option value="k*ctg(b*x)">ctg(x)</option><br>
+                <form>
+                    <p>k =
+                        <input type="number" id="kTrigonom">
+                    </p>
+                    <p>b = 
+                        <input type="number" id="bTrigonom">
+                    </p>
+                    <p>a = 
+                        <input type="number" id="aTrigonom">
+                    </p>
+                </form>
                 </select>
         </div>
         `; 
-        toPaste.append(form); 
     }
     if( selectedValue =="log" ){
-        let form = document.createElement('div');
         form.innerHTML = `
         <div id="pasted">
             <form action="">
@@ -108,11 +109,9 @@ const addCoefficient = (selected) =>{
                 </p>
             </form>
         </div>
-        `; 
-        toPaste.append(form);  
+        `;  
     }
     if( selectedValue =="exponential" ){
-        let form = document.createElement('div');
         form.innerHTML = `
         <div id="pasted">
             <form action="">
@@ -128,8 +127,8 @@ const addCoefficient = (selected) =>{
             </form>
         </div>
         `; 
-        toPaste.append(form);  
     }
+    toPaste.append(form);
 }; 
 
 const addChanges = () =>{
@@ -142,9 +141,9 @@ const addChanges = () =>{
     let selected = document.getElementById("select"); 
     addCoefficient(selected); 
 }; 
-const getCoeff = () =>{
-    const selectedValue = document.getElementById("select").value; 
-    const result = receiveCoeff[selectedValue]();   
+const getCoeff = (type) =>{
+    //const selectedValue = document.getElementById("select").value; 
+    const result = receiveCoeff[type]();   
     return result; 
 }; 
 
@@ -183,8 +182,11 @@ const receiveCoeff = {
         const b = document.getElementById("bDegree").value; 
         return { a, k, b}; 
     }, 
-    trigonom: () =>{
-        return {}; 
+    trigonometric: () =>{
+        const k = document.getElementById("kTrigonom").value;
+        const b = document.getElementById("bTrigonom").value; 
+        const a = document.getElementById("aTrigonom").value; 
+        return { a, k, b}; 
     },
 }; 
 
@@ -195,16 +197,17 @@ const draw = () =>{
     canvas.style.visibility = "visible"; 
     clearCanvas(); 
     drawAxes(); 
-    const coefficients = getCoeff(); 
     let type = document.getElementById("select").value; 
+    const coefficients = getCoeff(type); 
     if( type == "trigonometric" ){
-        type = document.getElementById("trigonom").value; 
-    } 
+        type = document.getElementById("trigonometricType").value; 
+    };
     ctx.beginPath();  
     ctx.strokeStyle = document.getElementById("grapfColor").value; 
     ctx.lineWidth = document.getElementById("thickness").value;   
     for( let x = -axes.x0; x <= axes.x0; x += difference){
-        build(x, coefficients, type); 
+        calculateCoords(x, coefficients, type); 
+        //drawGrapf(coords); 
     }
 }; 
 const clearCanvas = () => {
@@ -212,12 +215,16 @@ const clearCanvas = () => {
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1; 
 }; 
-async function build (coordX, coefficientss, type) {
-        let y = axes.y0 - calculateCoord(coefficientss, type, coordX);
+async function calculateCoords (coordX, coefficients, type) { 
+    if( type == "log"){
+        LogCalculate(coordX, coefficients); 
+    }
+        let y = axes.y0 - calculateY(coefficients, type, coordX);
         let x =  axes.x0+coordX; 
-        drawGrapf( x, y ); 
+        drawGrapf(x,y); 
+        //return {x, y};  
 }
-const drawGrapf = (x, y) =>{ 
+const drawGrapf = (x, y)=>{ 
    setTimeout( () =>{
     if( x == axes.x0){
         ctx.moveTo(x, y); 
@@ -242,9 +249,9 @@ const drawAxes = () => {
     ctx.lineTo(axes.xmax, axes.y0);  
     ctx.stroke(); 
 }; 
-const calculateCoord = (coefficients, type, x) =>{
-    const calculatedY = calculators[type](coefficients, x); 
-    return calculatedY; 
+const calculateY = (coefficients, type, x) =>{
+    const y = calculators[type](coefficients, x); 
+    return y; 
 }; 
 const calculators = {
     linear: (coefficients, x) =>{
@@ -260,8 +267,7 @@ const calculators = {
         let y = coefficients.k/x + coefficients.b;  
         return y; 
     },
-    log: (coefficients, x) =>{
-        if( x <= 0 || coefficients.a <= 0 ) return; 
+    log: (coefficients, x) =>{ 
         let y = Math.log(x)/Math.log(coefficients.a) + coefficients.b; 
         return y; 
     },
@@ -273,24 +279,23 @@ const calculators = {
         let y = Math.pow(coefficients.a, x)*coefficients.k + coefficients.b; 
         return y; 
     }, 
-    sin: (x) =>{
-        let y = Math.sin(x); 
+    sin: (coefficients, x) =>{
+        let y = coefficients.k* Math.sin(coefficients.b* x)+coefficients.a; 
         return y; 
     }, 
-    cos: (x) => {
-        let y = Math.cos(x); 
+    cos: (coefficients, x) => {
+        let y = coefficients.k* Math.cos(coefficients.b* x)+coefficients.a; 
         return y; 
     }, 
-    tg: () =>{
-        let y = Math.tan(x); 
+    tg: (coefficients, x) =>{
+        let y = coefficients.k* Math.tan(coefficients.b* x)+coefficients.a; 
         return y; 
     }, 
-    ctg: (x) =>{
+    ctg: (coefficients, x) =>{
         if( Math.tan(x) !== 0){
-            let y = 1/(Math.tan(x)); 
+            let y = coefficients.k* (1/Math.tan(coefficients.b* x))+coefficients.a; 
             return y; 
         }
-    }
-
+    },
 }; 
  
