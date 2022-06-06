@@ -216,13 +216,29 @@ const clearCanvas = () => {
     ctx.lineWidth = 1; 
 }; 
 async function calculateCoords (coordX, coefficients, type) { 
-    if( type == "log"){
-        LogCalculate(coordX, coefficients); 
-    }
+    // if( type == "log"  || type == "inverse"){
+    //     exception[type](coordX, coefficients); 
+    // }
         let y = axes.y0 - calculateY(coefficients, type, coordX);
         let x =  axes.x0+coordX; 
         drawGrapf(x,y); 
         //return {x, y};  
+}
+const exception = {
+    log: (coordX, coefficients)=>{
+        if( x > 0){
+            let y = axes.y0 - calculateY(coefficients, "log", coordX);
+            let x =  axes.x0+coordX; 
+            drawGrapf(x,y); 
+        }
+    }, 
+    inverse: (coordX, coefficients)=>{
+        if( x !== 0){
+            let y = axes.y0 - calculateY(coefficients, "inverse", coordX);
+            let x =  axes.x0+coordX; 
+            drawGrapf(x,y); 
+        }
+    }, 
 }
 const drawGrapf = (x, y)=>{ 
    setTimeout( () =>{
@@ -248,7 +264,8 @@ const drawAxes = () => {
     ctx.moveTo(0, axes.y0); 
     ctx.lineTo(axes.xmax, axes.y0);  
     ctx.stroke(); 
-}; 
+};  
+
 const calculateY = (coefficients, type, x) =>{
     const y = calculators[type](coefficients, x); 
     return y; 
