@@ -6,54 +6,108 @@ window.onload = () => {
     const buildButton = document.getElementById('buildGrapf');
     buildButton.onclick = () => draw();
 };
-const addChanges = () =>{
-    const button = document.getElementById("buildGrapf"); 
-    button.style.visibility = "visible"; 
-    const grapfColor = document.getElementById("grapfColor"); 
-    grapfColor.style.visibility = "visible"; 
-    const thickness = document.getElementById("thickness"); 
-    thickness.style.visibility = "visible"; 
-    let selected = document.getElementById("select"); 
-    addCoefficient(selected); 
-}; 
-const getCoeff = (type) =>{
-    //const selectedValue = document.getElementById("select").value; 
-    const result = receiveCoeff[type]();   
-    return result; 
-}; 
 const canvas = document.getElementById('Mycanvas'); 
 const ctx = canvas.getContext('2d'); 
 const difference = 0.1; 
-const draw = () =>{ 
+const axes = {
+    x0 : 0.5*canvas.width,
+    y0 : 0.5*canvas.height,
+    xmax : canvas.width, 
+    ymax : canvas.height,
+    //xInverseStart : axes.x0+difference,  
+}; 
+const drawAxes = () => {
+    ctx.beginPath();   
+    ctx.moveTo(axes.x0, 0); 
+    ctx.lineTo(axes.x0, axes.ymax); 
+    ctx.moveTo(0, axes.y0); 
+    ctx.lineTo(axes.xmax, axes.y0);  
+    ctx.stroke(); 
+};   
+let scale = document.getElementById("scale");
+let grapfColor = document.getElementById("grapfColor");
+let thickness = document.getElementById("thickness"); 
+
+const addChanges = () =>{
     canvas.style.visibility = "visible"; 
+    const button = document.getElementById("buildGrapf"); 
+    button.style.visibility = "visible";  
+    grapfColor.style.visibility = "visible"; 
+    thickness.style.visibility = "visible"; 
+    let selected = document.getElementById("select"); 
+    addCoefficient(selected); 
+    scale.style.visibility = "visible"; 
+    
+}; 
+const getCoeff = (type) =>{
+    const coefficients = receiveCoeff[type]();   
+    return coefficients; 
+}; 
+// const canvas = document.getElementById('Mycanvas'); 
+// const ctx = canvas.getContext('2d'); 
+
+const exceptions = ["trigonometric", "inverse", "degree"]; 
+async function draw  () {   
     clearCanvas(); 
     drawAxes(); 
+    ctx.beginPath();  
     let type = document.getElementById("select").value; 
     const coefficients = getCoeff(type); 
+    ctx.strokeStyle = grapfColor.value; 
+    ctx.lineWidth = thickness.value;   
+    if( exceptions.indexOf(type) !== -1){
+        calculateExeption(type, coefficients); 
+    }
     if( type == "trigonometric" ){
         type = document.getElementById("trigonometricType").value; 
     };
-    ctx.beginPath();  
-    ctx.strokeStyle = document.getElementById("grapfColor").value; 
-    ctx.lineWidth = document.getElementById("thickness").value;   
     for( let x = -axes.x0; x <= axes.x0; x += difference){
-        calculateCoords(x, coefficients, type); 
-        //drawGrapf(coords); 
+        calculateDraw(x, coefficients, type); 
+        //drawGrapf( coords.x, coords.y); 
+        //expemental( coords.x, coords.y); 
     }
 }; 
+const drawExeption = {
+    inverse: ( x, y, axes )=>{
+        setTimeout( () =>{
+            if( x == 0){
+                ctx.moveTo(x, y); 
+            }if( y == axes.y0 || y == 0){
+                ctx.moveTo(x, y); 
+            }else{
+                ctx.lineTo(x, y); 
+            }
+            ctx.stroke(); 
+            }, 1000
+           ); 
+    }, 
+    
+}
+
+
+async function calculateExeption (type, coefficients, difference = 0.1, counter = -axes.x0) {
+        if( counter == -difference ){
+            difference *= 0,1;  
+        };
+        if( counter  == difference && difference < 0,1){
+            difference *= 10;  
+        } 
+        let y = axes.y0 - calculateY(coefficients, type, counter); 
+        let x = counter + axes.x0; 
+        drawExeption[type](x, y, axes); 
+        counter += difference; 
+        counter <= axes.x0 ? calculateExeption(type, difference, difference, counter) : () =>{}; 
+}
 const clearCanvas = () => {
     ctx.clearRect( 0, 0, axes.xmax, axes.ymax); 
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1; 
 }; 
-async function calculateCoords (coordX, coefficients, type) { 
-    // if( type == "log"  || type == "inverse"){
-    //     exception[type](coordX, coefficients); 
-    // }
+async function calculateDraw (coordX, coefficients, type) { 
         let y = axes.y0 - calculateY(coefficients, type, coordX);
         let x =  axes.x0+coordX; 
-        drawGrapf(x,y); 
-        //return {x, y};  
+        //return {x, y}; 
+        drawGrapf(x,y);  
 }
 // const exception = {
 //     log: (coordX, coefficients)=>{
@@ -71,31 +125,34 @@ async function calculateCoords (coordX, coefficients, type) {
 //         }
 //     }, 
 // }
+const useScale = (x, y)=>{
+    let scaleValue = scale.value; 
+    if( scaleValue !== 1 ){
+        let xScaled = scaleValue*x; 
+        let yScaled = scaleValue*y; 
+        return { xScaled, yScaled}; 
+    }
+}
 const drawGrapf = (x, y)=>{ 
    setTimeout( () =>{
-    if( x == axes.x0){
-        ctx.moveTo(x, y); 
-    } else{
-        ctx.lineTo(x, y); 
-    }
-    ctx.stroke(); 
-    }, 1000
+        //const scaledCoord = useScale(x,y); 
+        if( x == axes.x0){
+            ctx.moveTo(x, y); 
+        } else{
+            ctx.lineTo(x, y); 
+        }
+        ctx.stroke(); 
+        }, 100
    ); 
 }
-const axes = {
-    x0 : 0.5*canvas.width,
-    y0 : 0.5*canvas.height,
-    xmax : canvas.width, 
-    ymax : canvas.height,
-}; 
-const drawAxes = () => {
-    ctx.beginPath();   
-    ctx.moveTo(axes.x0, 0); 
-    ctx.lineTo(axes.x0, axes.ymax); 
-    ctx.moveTo(0, axes.y0); 
-    ctx.lineTo(axes.xmax, axes.y0);  
-    ctx.stroke(); 
-};  
+// const drawAxes = () => {  
+//     ctx.beginPath();   
+//     ctx.moveTo(axes.x0, 0); 
+//     ctx.lineTo(axes.x0, axes.ymax); 
+//     ctx.moveTo(0, axes.y0); 
+//     ctx.lineTo(axes.xmax, axes.y0);  
+//     ctx.stroke(); 
+// };  
 
 const calculateY = (coefficients, type, x) =>{
     const y = calculators[type](coefficients, x); 
