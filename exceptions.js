@@ -1,50 +1,30 @@
 "use strict"; 
-export { fabricExceptions, Inverse}; 
+export { fabricExceptions}; 
 const fabricExceptions = ( type, coefficients, axes) =>{
-    let graf; 
-    let k = coefficients.k; 
-     let b = coefficients.b;  
-        let x0 = axes.x0;   
-        let y0 = axes.y0;  
-        let ymax = axes.ymax; 
-        let xmax = axes.xmax;  
-    if( type == 'inverse'){ 
-        graf = new Inverse(k, b, x0,y0, xmax, ymax); 
-    }
-    if( type == 'degree'){ 
-        let a = coefficients.a; 
-        graf = new Degree(k, b, x0,y0, xmax, ymax, a); 
-    }
-    // if( type == trigonometric){
-    //     let a = coefficients.a; 
-    //     const triginimetricType = document.getElementById("trigonometricType").value;
-    //     if( triginimetricType == "sin" || triginimetricType == "cos"){
-    //         graf = new SinCos(k, b, x0,y0, xmax, ymax, a, triginimetricType); 
-    //     }
-
-    // }
-    return graf; 
+    return exceptionDeterminant[type](coefficients, axes); 
 }; 
 
-class Inverse {
-    constructor(k, b, x0, y0, xmax, ymax){
-        this.k = k;
-        this.b = b; 
-        this.x0 = x0; 
-        this.difference = 0.1;  
-        this.xmax = xmax; 
-        this.ymax = ymax; 
-        this.y0 = y0;  
-        this.ctx = canvas.getContext('2d'); 
-        this.y = null;  
-        this.x = null; 
-    } 
-    drawLeft( x, y){ 
+const exceptionDeterminant = {
+    inverse: (coefficients, axes,  type) => {
+        return new InverseEquation( coefficients, axes, type);
+    },
+    degree : (coefficients, axes, type) => {
+        return new DegreeEquation( coefficients, axes, type); 
+    },
+    trigonometric: (coefficients, axes) => {
+        const trigonomType = document.getElementById("trigonometricType"); 
+        return new TrigonimetricEquation( coefficients, axes, trigonomType); 
+    }
+}
+
+class InverseEquation extends Canvas{
+    drawLeft( x, y){
+        const {xCenter, yCenter, xMax, yMax} = this.axes; 
         setTimeout( ()=>{
             if( x == 0){
                 this.ctx.moveTo(x, y); 
-            }if( x == this.x0){
-                this.k > 0 ? this.ctx.lineTo(x, this.ymax): this.ctx.lineTo(x, 0); 
+            }if( x == xCenter){
+                this.k > 0 ? this.ctx.lineTo(x, yMax): this.ctx.lineTo(x, 0); 
                 this.ctx.closePath(); 
             }else{
                 this.ctx.lineTo(x, y); 
@@ -54,12 +34,13 @@ class Inverse {
         )
     }
     drawRight( x, y){ 
+        const {xCenter, yCenter, xMax, yMax} = this.axes;
         setTimeout( ()=>{
             if( x == 0){
                 this.ctx.moveTo(x, y); 
-            }if( x == this.x0){ 
+            }if( x == xCenter){ 
                 this.ctx.beginPath(); 
-                this.k > 0 ? this.ctx.moveTo(x, 0): this.ctx.moveTo(x, this.ymax ); 
+                this.k > 0 ? this.ctx.moveTo(x, 0): this.ctx.moveTo(x, yMax ); 
             }else{
                 this.ctx.lineTo(x, y); 
             }
@@ -67,49 +48,31 @@ class Inverse {
             }, 1000    
         )
     }
-    async drawGraf( xStart){
-        this.y = this.y0 - (this.k/xStart+ this.b); 
-        this.x = /*this.*/xStart + this.x0;  
-        console.log( this.x + " " + this.y); 
-        if( xStart <= this.x0){
-            if( /*this.*/xStart < 0){
-                this.drawLeft( this.x, this.y); 
+    async drawFullGraf( xStart){
+        const {k, b} = this.coefficients; 
+        const {xCenter, yCenter, xMax, yMax} = this.axes; 
+        const y = yCenter - (k/xStart+ b); 
+        const x = xStart + xCenter;  
+        console.log( x + " " + y); 
+        if( xStart <= xCenter){
+            if(xStart < 0){
+                this.drawLeft( x, y); 
             }
-            if( /*this*/xStart == 0){
-                this.drawLeft( this.x, this.y); 
-                this.drawRight( this.x, this.y); 
+            if( xStart == 0){
+                this.drawLeft( x, y); 
+                this.drawRight( x, y); 
             }
-            if( /*this.*/xStart >0 ){
-                this.drawRight( this.x, this.y); 
-            // }else{
-            //     return; 
-            }
-            // /*this.*/xStart += this.difference;
-            //this.drawGraf(); 
+            if( xStart >0 ){
+                this.drawRight( x, y); 
+            } 
         }
     }
-}; 
-const canvas = document.getElementById('Mycanvas'); 
-class Degree{
-    constructor(k, b, x0,y0, xmax, ymax, a){
-        this.k = k;
-        this.b = b; 
-        this.x0 = x0; 
-        this.difference = 0.1;  
-        this.xmax = xmax; 
-        //this.xSrart = -xStart;
-        this.ymax = ymax; 
-        this.y0 = y0;  
-        this.y = null;  
-        this.x = null;  
-        this.a = a; 
-        this.ctx = canvas.getContext('2d'); 
-    }
-    draw  (x, y){ 
+}
+class DegreeEquation extends Canvas{
+    drawConnectDots (x, y){ 
         setTimeout( () =>{ 
-            console.log(x + " + " + y);
-             //const scaledCoord = useScale(x,y); 
-             if( x == /*this.x*/0){
+        console.log(x + " + " + y);
+             if( x == 0){
                  this.ctx.moveTo( x, y); 
              } else{
                  this.ctx.lineTo(x, y); 
@@ -117,33 +80,39 @@ class Degree{
              this.ctx.stroke(); 
              }, 100
         ); 
-
-     }; 
-    async drawGraf( xStart){ 
-        if( this.k >= 4){
-            this.y = this.y0 - ((Math.pow(xStart, this.k)*this.a + this.b)/Math.pow(100, this.k));
+     }
+    async drawFullGraf( xStart){ 
+        const { a, k, b} = this.coefficients; 
+        const {xCenter, yCenter, xMax, yMax} = this.axes;
+        let y;  
+        if( k >= 4){
+            y = yCenter - ((Math.pow(xStart, k)*a +b)/Math.pow(100, k));
         }
-        else{
-            this.y = this.y0 - (Math.pow(xStart, this.k,)*this.a + this.b); 
+        if( k < 4 ){
+            y = yCenter - (Math.pow(xStart, k)*a + b); 
         }
-        this.x = xStart + this.x0; 
+        let x = xStart + xCenter; 
         //this.xSrart += this.difference;                
-        this.draw( this.x, this.y); 
+        this.drawConnectDots( x, y); 
     }
 }
 
-class Trigonimetric{
-    constructor( k, b, x0,y0, xmax, ymax, a, triginimetricType){
-        this.k = k;
-        this.b = b; 
-        this.x0 = x0; 
-        this.xmax = xmax; 
-        this.type = triginimetricType; 
-        this.ymax = ymax; 
-        this.y0 = y0;  
-        this.y = null;  
-        this.x = null;  
-        this.a = a; 
-        this.ctx = canvas.getContext('2d'); 
+class TrigonimetricEquation extends Canvas{
+    drawConnectDots( x, y){
+        setTimeout( () =>{ 
+            console.log(x + " + " + y);
+            if( x == 0){
+                this.ctx.moveTo( x, y); 
+            } else{
+                this.ctx.lineTo(x, y); 
+            }
+            this.ctx.stroke(); 
+        }, 100); 
     }
+    async drawFullGraf (xStart, type = this.type){
+        const {xCenter, yCenter, xMax, yMax} = this.axes; 
+        let y = yCenter - ( calculateY( type, xStart))*10; 
+        let x = xCenter + xStart; 
+        this.drawConnectDots( x, y);  
+    } 
 }
