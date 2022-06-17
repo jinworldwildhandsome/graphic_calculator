@@ -1,6 +1,6 @@
+export { addCoefficient, calculators, receiveCoeff, innerHTMLvalues}; 
 
-export { addCoefficient, calculators, receiveCoeff }; 
-const addCoefficient = (selected) =>{
+const addCoefficient = (selected) => {
     let toPaste = document.getElementById("toPaste"); 
     let toDelete = document.getElementById("pasted");
     let selectedValue = selected.value;   
@@ -8,8 +8,13 @@ const addCoefficient = (selected) =>{
         toDelete.remove(); 
       }
     let form = document.createElement('div');
-    if( selectedValue =="linear" ){
-        form.innerHTML = `
+    form.innerHTML = innerHTMLvalues[selectedValue]; 
+    toPaste.append(form); 
+
+}
+
+const innerHTMLvalues ={
+    linear : `
         <div id="pasted">
             <form action="">
                 <p>k = 
@@ -20,10 +25,10 @@ const addCoefficient = (selected) =>{
                 </p>
             </form>
         </div>
-        `;   
-    }
-    if( selectedValue =="quadratic" ){
-        form.innerHTML = `
+        `, 
+
+    
+    quadratic:`
         <div id="pasted">
             <form action="">
                 <p>a =
@@ -37,10 +42,8 @@ const addCoefficient = (selected) =>{
                 </p>
             </form>
         </div>
-        `; 
-    }
-    if( selectedValue =="inverse" ){
-        form.innerHTML = `
+        `, 
+   inverse: `
         <div id="pasted">
             <form action="">
                 <p>k =
@@ -51,10 +54,8 @@ const addCoefficient = (selected) =>{
                 </p>
             </form>
         </div>
-        `; 
-    }
-    if( selectedValue =="degree" ){
-        form.innerHTML = `
+        `, 
+    degree: `
         <div id="pasted">
             <form action="">
             <p>a =
@@ -68,17 +69,15 @@ const addCoefficient = (selected) =>{
                 </p>
             </form>
         </div>
-        `;  
-    }
-    if( selectedValue =="trigonometric" ){
-        form.innerHTML = `
+        `, 
+    trigonometric: `
         <div id="pasted">
             <form action="">
-            <select name="trigonom" id="trigonometricType" onchange="">
-                <option value="k*sin(b*x)" selected>sin(x)</option>
-                <option value="k*cos(b*x)">cos(x)</option>
-                <option value="k*(tg(b*x)">tg(x)</option>
-                <option value="k*ctg(b*x)">ctg(x)</option><br>
+            <select name="trigonometricType" id="trigonometricType" onchange="">
+                <option value="sin" id="sin" selected>sin(x)</option>
+                <option value="cos" id="cos" >cos(x)</option>
+                <option value="tg" id="tg" >tg(x)</option>
+                <option value="ctg" id="ctg" >ctg(x)</option><br>
                 <form>
                     <p>k =
                         <input type="number" id="kTrigonom">
@@ -92,10 +91,8 @@ const addCoefficient = (selected) =>{
                 </form>
                 </select>
         </div>
-        `; 
-    }
-    if( selectedValue =="log" ){
-        form.innerHTML = `
+        `, 
+        log: `
         <div id="pasted">
             <form action="">
             <p>a =
@@ -109,10 +106,8 @@ const addCoefficient = (selected) =>{
                 </p>
             </form>
         </div>
-        `;  
-    }
-    if( selectedValue =="exponential" ){
-        form.innerHTML = `
+        `,
+    exponential: `
         <div id="pasted">
             <form action="">
             <p>a =
@@ -126,10 +121,8 @@ const addCoefficient = (selected) =>{
                 </p>
             </form>
         </div>
-        `; 
-    }
-    toPaste.append(form);
-}; 
+        `,
+};
 
 const receiveCoeff = {
     linear: () =>{
@@ -172,55 +165,38 @@ const receiveCoeff = {
         const a = document.getElementById("aTrigonom").value; 
         return { a, k, b}; 
     },
-}; 
-
-
+}
 const calculators = {
     linear: (coefficients, x) =>{
-       let y = coefficients.k*x+coefficients.b; 
-        return y; 
+       return coefficients.k*x+coefficients.b; 
     }, 
-    quadratic: (coefficients, x) =>{
-        let y = coefficients.a*x*x+coefficients.b*x+coefficients.c; 
-        return y; 
+    quadratic: (coefficients, x) =>{ 
+        return coefficients.a*x*x+coefficients.b*x+coefficients.c; 
     },
-    inverse: (coefficients, x) =>{
+    inverse: (/*coefficients*/ k, b, x) =>{
         if( x == 0) return; 
-        let y = coefficients.k/x + coefficients.b;  
+        let y = /*coefficients.*/k/x + /*coefficients.*/b;  
         return y; 
     },
     log: (coefficients, x) =>{ 
-        let y = Math.log(x)/Math.log(coefficients.a) + coefficients.b; 
-        return y; 
+        return Math.log(x)/Math.log(coefficients.a) + coefficients.b; 
     },
     exponential: (coefficients, x) =>{
-        let y = Math.exp(x)*coefficients.k + coefficients.b;  
-        return y; 
+        return Math.exp(x)*coefficients.k + coefficients.b;  
     },
     degree: (coefficients, x) =>{
-        let y = Math.pow(coefficients.a, x)*coefficients.k + coefficients.b; 
-        return y; 
+        return Math.pow(x, coefficients.k,)*coefficients.a + coefficients.b; 
     }, 
     sin: (coefficients, x) =>{
-        let y = coefficients.k* Math.sin(coefficients.b* x)+coefficients.a; 
-        return y; 
+        return coefficients.k* Math.sin(coefficients.b* x)+coefficients.a; 
     }, 
     cos: (coefficients, x) => {
-        let y = coefficients.k* Math.cos(coefficients.b* x)+coefficients.a; 
-        return y; 
+        return coefficients.k* Math.cos(coefficients.b* x)+coefficients.a; 
     }, 
     tg: (coefficients, x) =>{
-        let y = coefficients.k* Math.tan(coefficients.b* x)+coefficients.a; 
-        return y; 
+        return coefficients.k* Math.tan(coefficients.b* x)+coefficients.a; 
     }, 
     ctg: (coefficients, x) =>{
-        if( Math.tan(x) !== 0){
-            let y = coefficients.k* (1/Math.tan(coefficients.b* x))+coefficients.a; 
-            return y; 
-        }
+        return coefficients.k* (1/Math.tan(coefficients.b* x))+coefficients.a; 
     },
-}; 
- 
-
-
-
+}
