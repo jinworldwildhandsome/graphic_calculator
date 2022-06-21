@@ -12,7 +12,6 @@ const addCoefficient = (selected) => {
     toPaste.append(form); 
 
 }
-
 const innerHTMLvalues ={
     linear : `
         <div id="pasted">
@@ -123,48 +122,50 @@ const innerHTMLvalues ={
         </div>
         `,
 };
-
-const receiveCoeff = {
-    linear: () =>{
-        const k = document.getElementById("kLin").value;
-        const b = document.getElementById("bLin").value; 
-        return { k, b}; 
+const coeffsByTypes = {
+    linear: {
+        'k': "kLin", 
+        'b': "bLin", 
     }, 
-    quadratic: () =>{
-        const a = document.getElementById("aQuad").value;
-        const b = document.getElementById("bQuad").value; 
-        const c = document.getElementById("cQuad").value; 
-        return{ a, b, c}
+    quadratic: {
+        a:  "aQuad",
+        b: "bQuad", 
+        c: "cQuad", 
     },
-    inverse: () =>{
-        const k = document.getElementById("kInverse").value;
-        const b = document.getElementById("bInverse").value; 
-        return { k, b}; 
-    },
-    log: () =>{
-        const a = document.getElementById("aLog").value;
-        const b = document.getElementById("bLog").value; 
-        const k = document.getElementById("kLog").value;
-        return { a, k, b}; 
-    },
-    exponential: () =>{
-        const a = document.getElementById("aExponent").value;
-        const k = document.getElementById("kExponent").value;
-        const b = document.getElementById("bExponent").value; 
-        return {a, k, b}; 
-    },
-    degree: () =>{
-        const a = document.getElementById("aDegree").value;
-        const k = document.getElementById("kDegree").value;
-        const b = document.getElementById("bDegree").value; 
-        return { a, k, b}; 
+    inverse: {
+        k: "kInverse",
+        b: "bInverse",
     }, 
-    trigonometric: () =>{
-        const k = document.getElementById("kTrigonom").value;
-        const b = document.getElementById("bTrigonom").value; 
-        const a = document.getElementById("aTrigonom").value; 
-        return { a, k, b}; 
+    log: {
+        a: "aLog",
+        b: "bLog",
+        k: "kLog",
+    }, 
+    exponential: {
+        a: "aExponent", 
+        k: "kExponent",
+        b:"bExponent",
     },
+    degree: {
+        a: "aDegree", 
+        k: "kDegree", 
+        b: "bDegree",
+    }, 
+    trigonometric: {
+        k: "kTrigonom", 
+        b: "bTrigonom", 
+        a: "aTrigonom", 
+    },
+}
+ 
+const receiveCoeff = () =>{
+    const coeffRecever = {};
+    for (const type of coeffsByTypes) {
+        for( const [name, id] of type){
+            coeffRecever[name] = document.getElementById(id);
+        }
+    } 
+    return coeffRecever; 
 }
 const calculators = {
     linear: (coefficients, x) =>{
@@ -173,9 +174,9 @@ const calculators = {
     quadratic: (coefficients, x) =>{ 
         return coefficients.a*x*x+coefficients.b*x+coefficients.c; 
     },
-    inverse: (/*coefficients*/ k, b, x) =>{
+    inverse: (coefficients, x) =>{
         if( x == 0) return; 
-        let y = /*coefficients.*/k/x + /*coefficients.*/b;  
+        let y = coefficients.k/x + coefficients.b;  
         return y; 
     },
     log: (coefficients, x) =>{ 
