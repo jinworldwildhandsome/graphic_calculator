@@ -3,7 +3,7 @@ import { calculators, receiveCoeff, addCoefficient } from './functions.js';
 import { fabricExceptions} from './exceptions.js'; 
 window.onload = () => {
     const select = document.getElementById('select');
-    select.onchange = () => addChanges();
+    select.onchange = () => /*addChanges()*/ makeVisible();
     const buildButton = document.getElementById('buildGrapf');
     buildButton.onclick = () => drawAllParts();
 };
@@ -24,13 +24,39 @@ const drawAxes = () => {
     ctx.moveTo(0, axes.yCenter); 
     ctx.lineTo(axes.xMax, axes.yCenter);  
     ctx.stroke(); 
-};   
-let scale = document.getElementById("scale");
-let grapfColor = document.getElementById("grapfColor");
-let thickness = document.getElementById("thickness"); 
-let selectedFunctionType = document.getElementById("select");
-const buildButton = document.getElementById('buildGrapf');
-const divsToAdd = [ scale, grapfColor, thickness, buildButton, canvas]; 
+};  
+const hidenHTMLelements = {
+    scale: "scale", 
+    grapfColor: "grapfColor", 
+    thickness: "thickness",  
+    selectedFunctionType: "select", 
+    buildButton: "buildGrapf", 
+    showPreviousGrapf: "showPreviousGrapf", 
+} 
+const getHTMLelements = () =>{
+    const keys = Object.keys(hidenHTMLelements); 
+    const divsToAdd = new Map; 
+    for(const element of keys){
+        divsToAdd.set( element, document.getElementById(hidenHTMLelements[element])); 
+    }
+    return divsToAdd; 
+} 
+
+// let scale = document.getElementById("scale");
+// let grapfColor = document.getElementById("grapfColor");
+// let thickness = document.getElementById("thickness"); 
+// let selectedFunctionType = document.getElementById("select");
+// const buildButton = document.getElementById('buildGrapf');
+// const showPreviousGrapf = document.getElementById('showPreviousGrapf'); 
+// const divsToAdd = [ scale, grapfColor, thickness, buildButton, canvas]; 
+const makeVisible = () =>{
+    const elementHtml = getHTMLelements(); 
+    for( const divValue of elementHtml){
+        let element = elementHtml.get(divValue); 
+        //element.style.visibility = "visible"; 
+        console.log(element)
+    }
+}
 
 const addChanges = () =>{  
     addCoefficient(selectedFunctionType); 
@@ -147,7 +173,8 @@ class Canvas {
     changeColorSize( color, thickness){
         this.ctx.strokeStyle = color.value; 
         this.ctx.lineWidth = thickness.value;  
-    }
+    } 
+    
 }
 
 class StandartEquation extends Canvas{
