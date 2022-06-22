@@ -19,16 +19,7 @@ const axes = {
     xCenter : 0.5*canvas.width,
     yCenter : 0.5*canvas.height,
     xMax : canvas.width, 
-    yMax : canvas.height, 
-    //xStart: -0.5*canvas.width,  
-}; 
-const drawAxes = () => {
-    ctx.beginPath();   
-    ctx.moveTo(axes.xCenter, 0); 
-    ctx.lineTo(axes.xCenter, axes.yMax); 
-    ctx.moveTo(0, axes.yCenter); 
-    ctx.lineTo(axes.xMax, axes.yCenter);  
-    ctx.stroke(); 
+    yMax : canvas.height,  
 };  
 const hidenHTMLelements = {
     scale: "scale", 
@@ -64,7 +55,6 @@ const addChanges = (elementsHtml) =>{
         element.style.visibility = "visible"; 
     }
 }; 
-//const addChangesWrapped = addChanges(elementsHtml); 
   
 const exceptions = ["trigonometric", "inverse", "degree"]; 
 const currentGraf = {};  
@@ -101,15 +91,15 @@ class Canvas {
         return calculators[this.type](this.coefficients, x);
     }
     changeColorSize( arrValues,  ctx){
-        ctx.strokeStyle = arrValues[2]; 
-        ctx.lineWidth = arrValues[3];  
+        ctx.strokeStyle = arrValues[1]; 
+        ctx.lineWidth = arrValues[2];  
     }  
 }
 
 class StandartEquation extends Canvas{
-    async drawFullGraf (coordX, ctx) {
+    async drawFullGraf (coordX, ctx, scale) {
         const {xCenter, yCenter, xMax, yMax} = this.axes;    
-        let y = yCenter - this.calculateY(coordX);
+        let y = yCenter - this.calculateY(coordX)/scale;
         let x =  xCenter+coordX; 
         this.drawConnectDots(x,y, xCenter, ctx);  
     }
@@ -174,10 +164,10 @@ class InverseEquation extends Canvas{
             }, 1000    
         )
     }
-    async drawFullGraf( xStart, ctx){
+    async drawFullGraf( xStart, ctx, scale){
         const {k, b} = this.coefficients; 
         const {xCenter, yCenter, xMax, yMax} = this.axes; 
-        const y = yCenter - (k/xStart+ b); 
+        const y = yCenter - (k/xStart+ b)*scale*0.1; 
         const x = xStart + xCenter;  
         console.log( x + " " + y); 
         if( xStart <= xCenter){
@@ -207,12 +197,12 @@ class DegreeEquation extends Canvas{
             }, 100
         ); 
      }
-    async drawFullGraf( xStart, ctx){ 
+    async drawFullGraf( xStart, ctx, scale){ 
         const { a, k, b} = this.coefficients; 
         const {xCenter, yCenter, xMax, yMax} = this.axes;
         let y;  
         if( k >= 4){
-            y = yCenter - ((Math.pow(xStart, k)*a +b)/Math.pow(100, k));
+            y = yCenter - ((Math.pow(xStart, k)*a +b)/Math.pow(100, k))/scale;
         }
         if( k < 4 ){
             y = yCenter - (Math.pow(xStart, k)*a + b); 
@@ -235,9 +225,9 @@ class TrigonimetricEquation extends Canvas{
             ctx.stroke(); 
         }, 100); 
     }
-    async drawFullGraf (xStart, ctx){
+    async drawFullGraf (xStart, ctx, scale){
         const {xCenter, yCenter, xMax, yMax} = this.axes; 
-        let y = yCenter - ( this.calculateY( xStart))*10; 
+        let y = yCenter - ( this.calculateY( xStart))*10*scale; 
         let x = xCenter + (xStart)*10; 
         console.log(x +" + " + y); 
         this.drawConnectDots( x, y, ctx);  
@@ -251,11 +241,12 @@ function chooseDrawFunction ( coefficients, type) {
         drawedFunction = new StandartEquation( axes, coefficients, type); 
     }
     const divsValues = receiveHtmlValues(elementsHtml); 
+    console.dir(divsValues);
     drawedFunction.clearCanvas(ctx); 
     drawedFunction.drawAxes(ctx); 
     drawedFunction.changeColorSize( divsValues, ctx );
     for( let x = -axes.xCenter; x <= axes.xCenter; x += difference){
-        drawedFunction.drawFullGraf(x, ctx); 
+        drawedFunction.drawFullGraf(x, ctx, divsValues[0]); 
     }
 }
 
