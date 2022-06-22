@@ -3,7 +3,10 @@ import { calculators, receiveCoeff, addCoefficient } from './functions.js';
 // import { fabricExceptions} from './exceptions.js'; 
 window.onload = () => {
     const select = document.getElementById('select');
-    select.onchange = () => addChanges();
+    select.onchange = () => (function () {
+        const elementsHtml = getHTMLelements();
+        addChanges(elementsHtml); 
+    })();
     const buildButton = document.getElementById('buildGrapf');
     buildButton.onclick = () => drawAllParts();
     const prevDrawButton = document.getElementById("showPreviousGrapf"); 
@@ -43,10 +46,17 @@ const getHTMLelements = () =>{
         divsToAdd.set( element, document.getElementById(hidenHTMLelements[element])); 
     }
     return divsToAdd; 
-} 
-// const divsToAdd = [ scale, grapfColor, thickness, buildButton, canvas]; 
-const addChanges = () =>{  
-    const elementsHtml = getHTMLelements(); 
+}  
+const elementsHtml = getHTMLelements(); 
+const receiveHtmlValues = ( arr) => {
+    const divs = []; 
+    for( const divValue of arr.keys()){
+        let element = arr.get(divValue); 
+        divs.push( element.value);
+        if( divs.length === 3) return divs;  
+    } 
+}
+const addChanges = (elementsHtml) =>{  
     const selected = elementsHtml.get('selectedFunctionType'); 
     addCoefficient(selected); 
     for( const divValue of elementsHtml.keys()){
@@ -54,6 +64,7 @@ const addChanges = () =>{
         element.style.visibility = "visible"; 
     }
 }; 
+//const addChangesWrapped = addChanges(elementsHtml); 
   
 const exceptions = ["trigonometric", "inverse", "degree"]; 
 const currentGraf = {};  
@@ -69,10 +80,8 @@ class Canvas {
         this.coefficients = coefficients; 
         this.axes = axes; 
         this.type = type; 
-        //this.ctx = ctx; 
     }
     drawAxes  ( ctx ) {
-        console.log("hi1"); 
         const {xCenter, yCenter, xMax, yMax} = this.axes; 
         ctx.beginPath();   
         ctx.moveTo(xCenter, 0); 
@@ -83,18 +92,17 @@ class Canvas {
         ctx.beginPath(); 
     }
     clearCanvas  (ctx) {
-        console.log("hi2"); 
         const {xCenter, yCenter, xMax, yMax} = this.axes; 
         ctx.clearRect( 0, 0, xMax, yMax); 
         ctx.strokeStyle = "black"; 
         ctx.lineWidth = 1;  
     }
-    calculateY (/*coefficients, type*/ x) { 
-        return calculators[this.type](this.coefficients, x);; 
+    calculateY (x) { 
+        return calculators[this.type](this.coefficients, x);
     }
-    changeColorSize( color, thickness, ctx){
-        ctx.strokeStyle = color.value; 
-        ctx.lineWidth = thickness.value;  
+    changeColorSize( arrValues,  ctx){
+        ctx.strokeStyle = arrValues[2]; 
+        ctx.lineWidth = arrValues[3];  
     }  
 }
 
@@ -242,9 +250,10 @@ function chooseDrawFunction ( coefficients, type) {
     }else{
         drawedFunction = new StandartEquation( axes, coefficients, type); 
     }
+    const divsValues = receiveHtmlValues(elementsHtml); 
     drawedFunction.clearCanvas(ctx); 
     drawedFunction.drawAxes(ctx); 
-    //drawedFunction.changeColorSize( grapfColor, thickness);
+    drawedFunction.changeColorSize( divsValues, ctx );
     for( let x = -axes.xCenter; x <= axes.xCenter; x += difference){
         drawedFunction.drawFullGraf(x, ctx); 
     }
