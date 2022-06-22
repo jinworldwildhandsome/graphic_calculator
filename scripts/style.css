@@ -1,0 +1,31 @@
+#Mycanvas  {
+    width: 800px;
+    height: 500px;
+    margin: 40px;
+    background-color:rgb(231, 196, 255);
+    border: #a900c7;  
+}  
+#select{
+    width: 100px;
+    height: 40px;
+    background-color:#9e79d9; 
+}
+body{
+    background: #adb9eb;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; 
+    font-size: 150%;
+    color:black;
+} 
+#buildGrapf{
+    width: 300px;
+    height: 25px;
+    background-color:#9e79d9;
+    /* position: relative; 
+    bottom: 500px; 
+    left: 10px;  */
+}
+#pasted{
+    background-color: #b474d9; 
+    width: 20%;
+
+}
