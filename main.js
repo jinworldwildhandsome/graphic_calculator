@@ -1,14 +1,16 @@
 "use strict";
 import { calculators, receiveCoeff, addCoefficient } from './functions.js'; 
-import { fabricExceptions} from './exceptions.js'; 
+// import { fabricExceptions} from './exceptions.js'; 
 window.onload = () => {
     const select = document.getElementById('select');
-    select.onchange = () => /*addChanges()*/ makeVisible();
+    select.onchange = () => addChanges();
     const buildButton = document.getElementById('buildGrapf');
     buildButton.onclick = () => drawAllParts();
+    const prevDrawButton = document.getElementById("showPreviousGrapf"); 
+    prevDrawButton.onclick = () => remembeGrapf(); 
 };
 const canvas = document.getElementById('Mycanvas'); 
-//const ctx = canvas.getContext('2d'); 
+const ctx = canvas.getContext('2d'); 
 const difference = 0.1; 
 const axes = {
     xCenter : 0.5*canvas.width,
@@ -29,9 +31,10 @@ const hidenHTMLelements = {
     scale: "scale", 
     grapfColor: "grapfColor", 
     thickness: "thickness",  
-    selectedFunctionType: "select", 
+    'selectedFunctionType': "select", 
     buildButton: "buildGrapf", 
     showPreviousGrapf: "showPreviousGrapf", 
+    canvas: "Mycanvas", 
 } 
 const getHTMLelements = () =>{
     const keys = Object.keys(hidenHTMLelements); 
@@ -41,29 +44,19 @@ const getHTMLelements = () =>{
     }
     return divsToAdd; 
 } 
-
-// let scale = document.getElementById("scale");
-// let grapfColor = document.getElementById("grapfColor");
-// let thickness = document.getElementById("thickness"); 
-// let selectedFunctionType = document.getElementById("select");
-// const buildButton = document.getElementById('buildGrapf');
-// const showPreviousGrapf = document.getElementById('showPreviousGrapf'); 
 // const divsToAdd = [ scale, grapfColor, thickness, buildButton, canvas]; 
-const makeVisible = () =>{
-    const elementHtml = getHTMLelements(); 
-    for( const divValue of elementHtml){
-        let element = elementHtml.get(divValue); 
-        //element.style.visibility = "visible"; 
-        console.log(element)
-    }
-}
-
 const addChanges = () =>{  
-    addCoefficient(selectedFunctionType); 
-    for( const div of divsToAdd) div.style.visibility = "visible"; 
+    const elementsHtml = getHTMLelements(); 
+    const selected = elementsHtml.get('selectedFunctionType'); 
+    addCoefficient(selected); 
+    // for( const div of divsToAdd) div.style.visibility = "visible"; 
+    for( const divValue of elementsHtml.keys()){
+        let element = elementsHtml.get(divValue); 
+        element.style.visibility = "visible"; 
+    }
 }; 
 const getCoeff = (type) =>{
-    const coefficients = receiveCoeff[type]();   
+    const coefficients = receiveCoeff(type);   
     return coefficients; 
 };  
 
@@ -88,24 +81,28 @@ const exceptions = ["trigonometric", "inverse", "degree"];
     // }
     
 // }; 
+const currentGraf = {};  
 async function drawAllParts(){
     const type = document.getElementById("select").value;
     const coefficients = getCoeff(type); 
-    let drawedFunction; 
-    if( exceptions.includes(type)){
-        drawedFunction = fabricExceptions(type, coefficients, axes)
-    }else{
-        drawedFunction = new StandartEquation( axes, coefficients, type); 
-    }
-    drawedFunction.clearCanvas(); 
-    drawedFunction.drawAxes(); 
-    drawedFunction.changeColorSize( grapfColor, thickness);
-    for( let x = -axes.xCenter; x <= axes.xCenter; x += difference){
-        drawedFunction.drawFullGraf(x); 
-    }
+    chooseDrawFunction( type, coefficients);  
+    
+    Object.assign( currentGraf, {type, coefficients});
+    // let drawedFunction; 
+    // if( exceptions.includes(type)){
+    //     drawedFunction = fabricExceptions(type, coefficients, axes)
+    // }else{
+    //     drawedFunction = new StandartEquation( axes, coefficients, type); 
+    // }
+    // drawedFunction.clearCanvas(); 
+    // drawedFunction.drawAxes(); 
+    // drawedFunction.changeColorSize( grapfColor, thickness);
+    // for( let x = -axes.xCenter; x <= axes.xCenter; x += difference){
+    //     drawedFunction.drawFullGraf(x); 
+    // }
     
 }
- 
+
 // const clearCanvas = () => {
 //     ctx.clearRect( 0, 0, axes.xMax, axes.yMax); 
 //     ctx.strokeStyle = "black";
@@ -141,12 +138,13 @@ async function drawAllParts(){
 //     return y; 
 // }; 
 
+
 class Canvas {
-    constructor( axes, coefficients, type ){
+    constructor( axes, coefficients, type, ctx ){
         this.coefficients = coefficients; 
         this.axes = axes; 
         this.type = type; 
-        this.ctx = canvas.getContext('2d'); 
+        this.ctx = ctx; 
     }
     drawAxes  () {
         console.log("hi1"); 
@@ -173,8 +171,7 @@ class Canvas {
     changeColorSize( color, thickness){
         this.ctx.strokeStyle = color.value; 
         this.ctx.lineWidth = thickness.value;  
-    } 
-    
+    }  
 }
 
 class StandartEquation extends Canvas{
@@ -196,5 +193,137 @@ class StandartEquation extends Canvas{
              }, 100
         ); 
      }
-
 }
+const fabricExceptions = ( type, coefficients, axes) =>{
+    return exceptionDeterminant[type](coefficients, axes); 
+}; 
+
+const exceptionDeterminant = {
+    inverse: (coefficients, axes,  type) => {
+        return new InverseEquation( coefficients, axes, type);
+    },
+    degree : (coefficients, axes, type) => {
+        return new DegreeEquation( coefficients, axes, type); 
+    },
+    trigonometric: (coefficients, axes) => {
+        const trigonomType = document.getElementById("trigonometricType"); 
+        return new TrigonimetricEquation( coefficients, axes, trigonomType); 
+    }
+}
+
+class InverseEquation extends Canvas{
+    drawLeft( x, y){
+        const {xCenter, yCenter, xMax, yMax} = this.axes; 
+        setTimeout( ()=>{
+            if( x == 0){
+                this.ctx.moveTo(x, y); 
+            }if( x == xCenter){
+                this.k > 0 ? this.ctx.lineTo(x, yMax): this.ctx.lineTo(x, 0); 
+                this.ctx.closePath(); 
+            }else{
+                this.ctx.lineTo(x, y); 
+            }
+            this.ctx.stroke(); 
+            }, 1000    
+        )
+    }
+    drawRight( x, y){ 
+        const {xCenter, yCenter, xMax, yMax} = this.axes;
+        setTimeout( ()=>{
+            if( x == 0){
+                this.ctx.moveTo(x, y); 
+            }if( x == xCenter){ 
+                this.ctx.beginPath(); 
+                this.k > 0 ? this.ctx.moveTo(x, 0): this.ctx.moveTo(x, yMax ); 
+            }else{
+                this.ctx.lineTo(x, y); 
+            }
+            this.ctx.stroke(); 
+            }, 1000    
+        )
+    }
+    async drawFullGraf( xStart){
+        const {k, b} = this.coefficients; 
+        const {xCenter, yCenter, xMax, yMax} = this.axes; 
+        const y = yCenter - (k/xStart+ b); 
+        const x = xStart + xCenter;  
+        console.log( x + " " + y); 
+        if( xStart <= xCenter){
+            if(xStart < 0){
+                this.drawLeft( x, y); 
+            }
+            if( xStart == 0){
+                this.drawLeft( x, y); 
+                this.drawRight( x, y); 
+            }
+            if( xStart >0 ){
+                this.drawRight( x, y); 
+            } 
+        }
+    }
+}
+class DegreeEquation extends Canvas{
+    drawConnectDots (x, y){ 
+        setTimeout( () =>{ 
+        console.log(x + " + " + y);
+             if( x == 0){
+                 this.ctx.moveTo( x, y); 
+             } else{
+                 this.ctx.lineTo(x, y); 
+             }
+             this.ctx.stroke(); 
+             }, 100
+        ); 
+     }
+    async drawFullGraf( xStart){ 
+        const { a, k, b} = this.coefficients; 
+        const {xCenter, yCenter, xMax, yMax} = this.axes;
+        let y;  
+        if( k >= 4){
+            y = yCenter - ((Math.pow(xStart, k)*a +b)/Math.pow(100, k));
+        }
+        if( k < 4 ){
+            y = yCenter - (Math.pow(xStart, k)*a + b); 
+        }
+        let x = xStart + xCenter; 
+        //this.xSrart += this.difference;                
+        this.drawConnectDots( x, y); 
+    }
+}
+
+class TrigonimetricEquation extends Canvas{
+    drawConnectDots( x, y){
+        setTimeout( () =>{ 
+            console.log(x + " + " + y);
+            if( x == 0){
+                this.ctx.moveTo( x, y); 
+            } else{
+                this.ctx.lineTo(x, y); 
+            }
+            this.ctx.stroke(); 
+        }, 100); 
+    }
+    async drawFullGraf (xStart, type = this.type){
+        const {xCenter, yCenter, xMax, yMax} = this.axes; 
+        let y = yCenter - ( calculateY( type, xStart))*10; 
+        let x = xCenter + xStart; 
+        this.drawConnectDots( x, y);  
+    } 
+}
+function chooseDrawFunction ( coefficients, type, canvas) {
+    let drawedFunction; 
+    if( exceptions.includes(type)){
+        drawedFunction = fabricExceptions(type, coefficients, axes)
+    }else{
+        drawedFunction = new StandartEquation( axes, coefficients, type); 
+    }
+    drawedFunction.clearCanvas(); 
+    drawedFunction.drawAxes(); 
+    drawedFunction.changeColorSize( grapfColor, thickness);
+    for( let x = -axes.xCenter; x <= axes.xCenter; x += difference){
+        drawedFunction.drawFullGraf(x); 
+    }
+}
+
+const drawpPreviousGrapf = ( {prevType, prevCoefficients}) => () => chooseDrawFunction( prevType, prevCoefficients); 
+const remembeGrapf = drawpPreviousGrapf(currentGraf); 
