@@ -45,6 +45,7 @@ Also some examples of usage scale
 
 # License  
 
+https://github.com/jinworldwildhandsome/graphic_calculator/blob/master/LICENSE 
 
 
 # Plans for Future 
