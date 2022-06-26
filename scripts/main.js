@@ -2,16 +2,17 @@
 import { receiveCoeff, addCoefficient } from './functions.js'; 
 import { fabricExceptions, StandartEquation  } from './exceptions.js'; 
 import {Stack} from './previous.js'; 
+import { EventEmitter} from './eventEmmiter.js'; 
+const mainEventEmitter = new EventEmitter(); 
 window.onload = () => {
     const select = document.getElementById('select');
     select.onchange = () => (function () {
-        const elementsHtml = getHTMLelements();
-        addChanges(elementsHtml); 
-    })();
+        mainEventEmitter.emit('addHTMLobjects', elementsHtml );
+    })()
     const buildButton = document.getElementById('buildGrapf');
-    buildButton.onclick = () => drawAllParts();
+    buildButton.onclick = () => mainEventEmitter.emit("drawAllParts", null);
     const prevDrawButton = document.getElementById("showPreviousGrapf"); 
-    prevDrawButton.onclick = () => drawPreviousGrapf(); 
+    prevDrawButton.onclick = () => mainEventEmitter.emit("drawPreviousGrapf", null);
 };
 const canvas = document.getElementById('Mycanvas'); 
 const ctx = canvas.getContext('2d'); 
@@ -29,6 +30,7 @@ const hidenHTMLelements = {
     'selectedFunctionType': "select", 
     buildButton: "buildGrapf", 
     showPreviousGrapf: "showPreviousGrapf", 
+    clearCanvas: "clearCanvas", 
     canvas: "Mycanvas", 
 } 
 const getHTMLelements = () =>{
@@ -49,6 +51,7 @@ const receiveHtmlValues = ( arr) => {
     } 
 }
 const addChanges = (elementsHtml) =>{  
+    //const elementsHtml = getHTMLelements(); 
     const selected = elementsHtml.get('selectedFunctionType'); 
     addCoefficient(selected); 
     for( const divValue of elementsHtml.keys()){
@@ -56,7 +59,8 @@ const addChanges = (elementsHtml) =>{
         element.style.visibility = "visible"; 
     }
 };  
-const exceptions = ["trigonometric", "inverse", "degree"];   
+mainEventEmitter.on( 'addHTMLobjects', addChanges); 
+const exceptions = ["trigonometric", "inverse", "degree", "log"];   
 async function drawAllParts(){
     const type = document.getElementById("select").value;
     const coefficients = receiveCoeff(type); 
@@ -67,11 +71,12 @@ function chooseDrawFunction ( coefficients, type) {
     const grapf = chooseEquationType(type, coefficients); 
     grapf.clearCanvas(ctx); 
     grapf.drawAxes(ctx); 
-    drawEquation(grapf); 
-    stack.memoize( type, coefficients); 
+    drawEquation(grapf);   
+    stack.memoize( type, coefficients);
 } 
 const chooseEquationType = (type, coefficients) =>{
     let drawedFunction; 
+    console.log(type); 
     if( exceptions.includes(type)){
         drawedFunction = fabricExceptions(type, coefficients, axes)
     }else{
@@ -88,6 +93,7 @@ const drawEquation = classEquation =>{
     }
 
 }
+mainEventEmitter.on("drawAllParts", drawAllParts); 
 function drawPreviousGrapf (){
     const funcInfo = stack.getFromMemory(); 
     console.log(funcInfo.funcType); 
@@ -95,3 +101,4 @@ function drawPreviousGrapf (){
     console.log(grapf)
     drawEquation(grapf); 
 }
+mainEventEmitter.on("drawPreviousGrapf", drawPreviousGrapf); 
