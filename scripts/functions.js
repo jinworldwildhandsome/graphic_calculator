@@ -10,8 +10,8 @@ const addCoefficient = (selected) => {
     let form = document.createElement('div');
     form.innerHTML = innerHTMLvalues[selectedValue]; 
     toPaste.append(form); 
-
 }
+
 const innerHTMLvalues ={
     linear : `
         <div id="pasted">
@@ -122,6 +122,7 @@ const innerHTMLvalues ={
         </div>
         `,
 };
+
 const coeffsByTypes = {
     linear: {
         'k': "kLin", 
@@ -157,7 +158,14 @@ const coeffsByTypes = {
         a: "aTrigonom", 
     },
 }
- 
+const toNumber = (coefficients) =>{
+    const keys = Object.keys(coefficients); 
+    const numberCoeffs = {}; 
+    for( const key of keys ){
+        numberCoeffs[key] = +coefficients[key]; 
+    }
+    return numberCoeffs; 
+}
 const receiveCoeff = (type) =>{
     const coeffRecever = {};
     const functionType = coeffsByTypes[type]; 
@@ -165,8 +173,10 @@ const receiveCoeff = (type) =>{
         const id = functionType[name]; 
         coeffRecever[name] = document.getElementById(id).value;
     }
-    return coeffRecever; 
+    const coefsNumbers = toNumber(coeffRecever); 
+    return coefsNumbers; 
 }
+
 const calculators = {
     linear: (coefficients, x) =>{
        return coefficients.k*x+coefficients.b; 
@@ -180,7 +190,7 @@ const calculators = {
         return y; 
     },
     log: (coefficients, x) =>{ 
-        return Math.log(x)/Math.log(coefficients.a) + coefficients.b; 
+        return coefficients.k*Math.log(x)/Math.log(coefficients.a) + coefficients.b; 
     },
     exponential: (coefficients, x) =>{
         return Math.exp(x)*coefficients.k + coefficients.b;  
