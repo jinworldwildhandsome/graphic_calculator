@@ -1,19 +1,19 @@
-export { addCoefficient, calculators, receiveCoeff, innerHTMLvalues}; 
+export { addCoefficient, calculators, receiveCoeff, innerHTMLvalues };
 
 const addCoefficient = (selected) => {
-    let toPaste = document.getElementById("toPaste"); 
-    let toDelete = document.getElementById("pasted");
-    let selectedValue = selected.value;   
-    if( toDelete !== null ){
-        toDelete.remove(); 
-      }
-    let form = document.createElement('div');
-    form.innerHTML = innerHTMLvalues[selectedValue]; 
-    toPaste.append(form); 
-}
+  let toPaste = document.getElementById("toPaste");
+  let toDelete = document.getElementById("pasted");
+  let selectedValue = selected.value;
+  if (toDelete !== null) {
+    toDelete.remove();
+  }
+  let form = document.createElement("div");
+  form.innerHTML = innerHTMLvalues[selectedValue];
+  toPaste.append(form);
+};
 
-const innerHTMLvalues ={
-    linear : `
+const innerHTMLvalues = {
+  linear: `
         <div id="pasted">
             <form action="">
                 <p>k = 
@@ -24,10 +24,9 @@ const innerHTMLvalues ={
                 </p>
             </form>
         </div>
-        `, 
+        `,
 
-    
-    quadratic:`
+  quadratic: `
         <div id="pasted">
             <form action="">
                 <p>a =
@@ -41,8 +40,8 @@ const innerHTMLvalues ={
                 </p>
             </form>
         </div>
-        `, 
-   inverse: `
+        `,
+  inverse: `
         <div id="pasted">
             <form action="">
                 <p>k =
@@ -53,8 +52,8 @@ const innerHTMLvalues ={
                 </p>
             </form>
         </div>
-        `, 
-    degree: `
+        `,
+  degree: `
         <div id="pasted">
             <form action="">
             <p>a =
@@ -68,8 +67,8 @@ const innerHTMLvalues ={
                 </p>
             </form>
         </div>
-        `, 
-    trigonometric: `
+        `,
+  trigonometric: `
         <div id="pasted">
             <form action="">
             <select name="trigonometricType" id="trigonometricType" onchange="">
@@ -90,8 +89,8 @@ const innerHTMLvalues ={
                     </p>
                 </form>
         </div>
-        `, 
-        log: `
+        `,
+  log: `
         <div id="pasted">
             <form action="">
             <p>a =
@@ -106,7 +105,7 @@ const innerHTMLvalues ={
             </form>
         </div>
         `,
-    exponential: `
+  exponential: `
         <div id="pasted">
             <form action="">
             <p>a =
@@ -124,91 +123,88 @@ const innerHTMLvalues ={
 };
 
 const coeffsByTypes = {
-    linear: {
-        'k': "kLin", 
-        'b': "bLin", 
-    }, 
-    quadratic: {
-        a:  "aQuad",
-        b: "bQuad", 
-        c: "cQuad", 
-    },
-    inverse: {
-        k: "kInverse",
-        b: "bInverse",
-    }, 
-    log: {
-        a: "aLog",
-        b: "bLog",
-        k: "kLog",
-    }, 
-    exponential: {
-        a: "aExponent", 
-        k: "kExponent",
-        b:"bExponent",
-    },
-    degree: {
-        a: "aDegree", 
-        k: "kDegree", 
-        b: "bDegree",
-    }, 
-    trigonometric: {
-        k: "kTrigonom", 
-        b: "bTrigonom", 
-        a: "aTrigonom", 
-    },
-}
-const toNumber = (coefficients) =>{
-    const keys = Object.keys(coefficients); 
-    const numberCoeffs = {}; 
-    for( const key of keys ){
-        numberCoeffs[key] = +coefficients[key]; 
-    }
-    return numberCoeffs; 
-}
-const receiveCoeff = (type) =>{
-    const coeffRecever = {};
-    const functionType = coeffsByTypes[type]; 
-    for( const name in functionType){
-        const id = functionType[name]; 
-        coeffRecever[name] = document.getElementById(id).value;
-    }
-    const coefsNumbers = toNumber(coeffRecever); 
-    return coefsNumbers; 
-}
+  linear: {
+    k: "kLin",
+    b: "bLin",
+  },
+  quadratic: {
+    a: "aQuad",
+    b: "bQuad",
+    c: "cQuad",
+  },
+  inverse: {
+    k: "kInverse",
+    b: "bInverse",
+  },
+  log: {
+    a: "aLog",
+    b: "bLog",
+    k: "kLog",
+  },
+  exponential: {
+    a: "aExponent",
+    k: "kExponent",
+    b: "bExponent",
+  },
+  degree: {
+    a: "aDegree",
+    k: "kDegree",
+    b: "bDegree",
+  },
+  trigonometric: {
+    k: "kTrigonom",
+    b: "bTrigonom",
+    a: "aTrigonom",
+  },
+};
+const toNumber = (coefficients) => {
+  const keys = Object.keys(coefficients);
+  const numberCoeffs = {};
+  for (const key of keys) {
+    numberCoeffs[key] = +coefficients[key];
+  }
+  return numberCoeffs;
+};
+const receiveCoeff = (type) => {
+  const coeffRecever = {};
+  const functionType = coeffsByTypes[type];
+  for (const name in functionType) {
+    const id = functionType[name];
+    coeffRecever[name] = document.getElementById(id).value;
+  }
+  const coefsNumbers = toNumber(coeffRecever);
+  return coefsNumbers;
+};
 
 const calculators = {
-    linear: (coefficients, x) =>{
-       return coefficients.k*x+coefficients.b; 
-    }, 
-    quadratic: (coefficients, x) =>{ 
-        return coefficients.a*x*x+coefficients.b*x+coefficients.c; 
-    },
-    inverse: (coefficients, x) =>{
-        if( x == 0) return; 
-        let y = coefficients.k/x + coefficients.b;  
-        return y; 
-    },
-    log: (coefficients, x) =>{ 
-        return coefficients.k*Math.log(x)/Math.log(coefficients.a) + coefficients.b; 
-    },
-    exponential: (coefficients, x) =>{
-        return Math.exp(x)*coefficients.k + coefficients.b;  
-    },
-    degree: (coefficients, x) =>{
-        return Math.pow(x, coefficients.k,)*coefficients.a + coefficients.b; 
-    }, 
-    sin: (coefficients, x) =>{
-        console.log(coefficients + "1"); 
-        return coefficients.k* Math.sin(coefficients.b* x)+coefficients.a; 
-    }, 
-    cos: (coefficients, x) => {
-        return coefficients.k* Math.cos(coefficients.b* x)+coefficients.a; 
-    }, 
-    tg: (coefficients, x) =>{
-        return coefficients.k* Math.tan(coefficients.b* x)+coefficients.a; 
-    }, 
-    ctg: (coefficients, x) =>{
-        return coefficients.k* (1/Math.tan(coefficients.b* x))+coefficients.a; 
-    },
-}
+  linear: (coefficients, x) => {
+    return coefficients.k * x + coefficients.b;
+  },
+  quadratic: (coefficients, x) => {
+    return coefficients.a * x * x + coefficients.b * x + coefficients.c;
+  },
+  log: (coefficients, x) => {
+    return (
+      (coefficients.k * Math.log(x)) / Math.log(coefficients.a) + coefficients.b
+    );
+  },
+  exponential: (coefficients, x) => {
+    return Math.exp(x) * coefficients.k + coefficients.b;
+  },
+  degree: (coefficients, x) => {
+    return Math.pow(x, coefficients.k) * coefficients.a + coefficients.b;
+  },
+  sin: (coefficients, x) => {
+    console.log(coefficients + "1");
+    return coefficients.k * Math.sin(coefficients.b * x) + coefficients.a;
+  },
+  cos: (coefficients, x) => {
+    return coefficients.k * Math.cos(coefficients.b * x) + coefficients.a;
+  },
+  tg: (coefficients, x) => {
+    return coefficients.k * Math.tan(coefficients.b * x) + coefficients.a;
+  },
+  ctg: (coefficients, x) => {
+    return coefficients.k * (1 / Math.tan(coefficients.b * x)) + coefficients.a;
+  },
+};
