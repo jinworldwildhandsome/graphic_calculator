@@ -1,0 +1,57 @@
+#Mycanvas  {
+    width: 800px;
+    height: 500px;
+    margin: 40px;
+    background-color:rgb(231, 196, 255);
+    padding: 1em;
+    border: 0.01em solid rgb(159, 100, 243);
+}  
+#select{
+    width: 100px;
+    height: 40px;
+    background-color:#9e79d9; 
+}
+body{
+    background: #adb9eb;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; 
+    font-size: 150%;
+    color:black;
+} 
+button{
+    width: 300px;
+    height: 25px;
+    background-color:#9e79d9;
+}
+#pasted{
+    background-color: #b474d9; 
+    width: 20%;
+
+}
+.right-bar {
+    background-color: rgb(179, 145, 239);
+    padding: 1em;
+    border: 0.01em solid rgba(94, 25, 205, 0.964);
+}
+.left-bar {
+    background-color: rgb(85, 160, 209);
+    color:whitesmoke;
+    padding: 1em;
+    border-right: 0.01em solid rgb(93, 17, 180);
+}
+.centr-bar{
+    background-color: rgb(114, 85, 209);
+    color:whitesmoke;
+    padding: 1em;
+    border-right: 0.01em solid rgb(93, 17, 180);
+    
+}
+/* section{
+    display: flexbox;
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+} */
+#container {
+    display: flex;
+    flex-direction: row;
+  }

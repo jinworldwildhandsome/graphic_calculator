@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style/style.css">
+  <title>Построить график функции</title>
+</head>
+<body>
+  <div>
+    <p>
+      Выберите тип функции :
+    </p>
+</div>
+<div class="container ">
+<section>
+  <div class="left-bar">
+  <select name="funtions" id="select" >
+    <option value="no" selected> </option>
+    <option value="linear">kx+b</option>
+    <option value="quadratic">ax^2+bx+c</option>
+    <option value="inverse">k/x+b</option>
+    <option value="degree">ax^k+b </option>
+    <option value="trigonometric">sin, cos, tg, ctg</option>
+    <option value="log">klog(x)+b</option>
+    <option value="exponential">ka^x+b</option>
+  </select>
+  <div id="toPaste"> </div>
+</div>
+<div class="center-bar">
+  <canvas id="Mycanvas"  style="visibility: hidden"></canvas>
+</div>
+  <div class="right-bar">
+    <button id="buildGrapf"  style="visibility: hidden">Построить график</button> 
+    <button id="showPreviousGrapf"  style="visibility: hidden">Показать предыдущий график</button>
+    <button id="clearCanvas" style="visibility: hidden">Очистить</button>
+    <input type="color" name="grapfColor" id="grapfColor"  style="visibility: hidden">
+    <input type="range" name="thickness" id="thickness"  style="visibility: hidden" min="0.1" max ="10"  step = "0.1" value="1">
+    <input type="range" name="scale" id="scale"  style="visibility: hidden" min="1" max ="10"  step = "1" value="1">
+  </div>
+</section>
+</div>
+<script type = "module" src="./scripts/main.js" ></script> 
+<!-- <script src="functions.mjs" ></script>  -->
+</body>
+</html>
