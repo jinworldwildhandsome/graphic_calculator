@@ -1,5 +1,3 @@
-"use strict";
-export { Stack };
 class Stack {
   constructor() {
     this.cache = new Map();
@@ -26,5 +24,5 @@ class Stack {
     return previousFunc;
   }
 }
-
+export { Stack };
 

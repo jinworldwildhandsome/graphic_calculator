@@ -1,5 +1,4 @@
-"use strict";
-export { EventEmitter };
+
 class EventEmitter {
   constructor() {
     this.events = new Map();
@@ -20,3 +19,4 @@ class EventEmitter {
     }
   }
 }
+export { EventEmitter };

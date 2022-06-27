@@ -1,6 +1,3 @@
-"use strict";
-export { StandartEquation, fabricUnusualFunc };
-
 import { calculators } from "./functions.js";
 
 class Canvas {
@@ -174,3 +171,4 @@ class LogEquation extends StandartEquation {
     this.drawConnectDots(x, y, xCenter, ctx);
   }
 }
+export { StandartEquation, fabricUnusualFunc };

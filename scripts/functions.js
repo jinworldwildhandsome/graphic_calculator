@@ -1,5 +1,3 @@
-export { addCoefficient, calculators, receiveCoeff, innerHTMLvalues };
-
 const addCoefficient = (selected) => {
   let toPaste = document.getElementById("toPaste");
   let toDelete = document.getElementById("pasted");
@@ -208,3 +206,4 @@ const calculators = {
     return coefficients.k * (1 / Math.tan(coefficients.b * x)) + coefficients.a;
   },
 };
+export { addCoefficient, calculators, receiveCoeff, innerHTMLvalues };

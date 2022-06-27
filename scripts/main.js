@@ -1,4 +1,3 @@
-"use strict";
 
 import { receiveCoeff, addCoefficient } from "./functions.js";
 
@@ -21,6 +20,8 @@ window.onload = () => {
   const prevDrawButton = document.getElementById("showPreviousGrapf");
   prevDrawButton.onclick = () =>
     mainEventEmitter.emit("drawPreviousGrapf", null);
+  const clearButton = document.getElementById("clearCanvas"); 
+  clearButton.onclick = () => ctx.clearRect(0, 0, axes.xMax, axes.yMax); 
 };
 const canvas = document.getElementById("Mycanvas");
 const ctx = canvas.getContext("2d");
