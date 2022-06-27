@@ -31,7 +31,7 @@ class Canvas {
   }
   drawConnectDots(x, y, xCenter, ctx) {
     setTimeout(() => {
-      if (x == xCenter) {
+      if (x === xCenter) {
         ctx.moveTo(x, y);
       } else {
         ctx.lineTo(x, y);
@@ -76,7 +76,7 @@ class InverseEquation extends Canvas {
   drawLeft(x, y, ctx) {
     const { xCenter, yCenter, xMax, yMax } = this.axes;
     setTimeout(() => {
-      if (x == 0) {
+      if (x === 0) {
         ctx.moveTo(x, y);
       }
       if (x == xCenter) {
@@ -91,7 +91,7 @@ class InverseEquation extends Canvas {
   drawRight(x, y, ctx) {
     const { xCenter, yCenter, xMax, yMax } = this.axes;
     setTimeout(() => {
-      if (x == xCenter) {
+      if (x === xCenter) {
         ctx.beginPath();
         k > 0 ? ctx.moveTo(xCenter, 0) : ctx.moveTo(xCenter, yMax);
       } else {
@@ -108,7 +108,7 @@ class InverseEquation extends Canvas {
     if (xStart < xCenter) {
       this.drawLeft(x, y, ctx);
     }
-    if (xStart == xCenter) {
+    if (xStart === xCenter) {
       this.drawLeft(x, y, ctx);
       this.drawRight(x, y, ctx);
     }
@@ -147,7 +147,7 @@ class DegreeEquation extends Canvas {
 class TrigonimetricEquation extends Canvas {
   drawConnectDots(x, y, ctx) {
     setTimeout(() => {
-      if (x == 0) {
+      if (x === 0) {
         ctx.moveTo(x, y);
       } else {
         ctx.lineTo(x, y);
