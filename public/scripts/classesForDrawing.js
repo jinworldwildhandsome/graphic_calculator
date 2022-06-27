@@ -1,4 +1,4 @@
-import { calculators } from "./functions.js";
+import { calculators } from './functions.js';
 
 class Canvas {
   constructor(axes, coefficients, type) {
@@ -19,7 +19,7 @@ class Canvas {
   clearCanvas(ctx) {
     const { xCenter, yCenter, xMax, yMax } = this.axes;
     ctx.clearRect(0, 0, xMax, yMax);
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = 'black';
     ctx.lineWidth = 1;
   }
   calculateY(x) {
@@ -49,11 +49,9 @@ class StandartEquation extends Canvas {
     this.drawConnectDots(x, y, xCenter, ctx);
   }
 }
-
 const fabricUnusualFunc = (type, coefficients, axes) => {
   return exceptionDeterminant[type](coefficients, axes);
 };
-
 const exceptionDeterminant = {
   inverse: (coefficients, axes, type) => {
     return new InverseEquation(axes, coefficients, type);
@@ -62,7 +60,7 @@ const exceptionDeterminant = {
     return new DegreeEquation(axes, coefficients, type);
   },
   trigonometric: (coefficients, axes) => {
-    const trigonomType = document.getElementById("trigonometricType").value;
+    const trigonomType = document.getElementById('trigonometricType').value;
     console.log(trigonomType);
     return new TrigonimetricEquation(axes, coefficients, trigonomType);
   },

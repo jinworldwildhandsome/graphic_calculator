@@ -1,23 +1,12 @@
-import { receiveCoeff, addCoefficient } from "./functions.js";
-import { fabricUnusualFunc, StandartEquation } from "./classesForDrawing.js";
-import { Stack } from "./previous.js";
-import { EventEmitter } from "./eventEmmiter.js";
+import { receiveCoeff, addCoefficient } from './functions.js';
+import { fabricUnusualFunc, StandartEquation } from './classesForDrawing.js';
+import { Stack } from './previous.js';
+import { EventEmitter } from './eventEmmiter.js';
+
 const mainEventEmitter = new EventEmitter();
-window.onload = () => {
-  const select = document.getElementById("select");
-  select.onchange = () =>
-    (function () {
-      mainEventEmitter.emit("addHTMLobjects", elementsHtml);
-    })();
-  const buildButton = document.getElementById("buildGrapf");
-  buildButton.onclick = () => mainEventEmitter.emit("drawAllParts", null);
-  const prevDrawButton = document.getElementById("showPreviousGrapf");
-  prevDrawButton.onclick = () => mainEventEmitter.emit("drawPreviousGrapf", null);
-  const clearButton = document.getElementById("clearCanvas"); 
-  clearButton.onclick = () => ctx.clearRect(0, 0, axes.xMax, axes.yMax); 
-};
-const canvas = document.getElementById("Mycanvas");
-const ctx = canvas.getContext("2d");
+const stack = new Stack();
+const canvas = document.getElementById('Mycanvas');
+const ctx = canvas.getContext('2d');
 const Difference = 0.1;
 const axes = {
   xCenter: 0.5 * canvas.width,
@@ -26,14 +15,14 @@ const axes = {
   yMax: canvas.height,
 };
 const hidenHTMLelements = {
-  scale: "scale",
-  grapfColor: "grapfColor",
-  thickness: "thickness",
-  selectedFunctionType: "select",
-  buildButton: "buildGrapf",
-  showPreviousGrapf: "showPreviousGrapf",
-  clearCanvas: "clearCanvas",
-  canvas: "Mycanvas",
+  scale: 'scale',
+  grapfColor: 'grapfColor',
+  thickness: 'thickness',
+  selectedFunctionType: 'select',
+  buildButton: 'buildGrapf',
+  showPreviousGrapf: 'showPreviousGrapf',
+  clearCanvas: 'clearCanvas',
+  canvas: 'Mycanvas',
 };
 
 const getHTMLelements = () => {
@@ -55,21 +44,20 @@ const receiveHtmlValues = (arr) => {
   }
 };
 const addChanges = (elementsHtml) => {
-  const selected = elementsHtml.get("selectedFunctionType");
+  const selected = elementsHtml.get('selectedFunctionType');
   addCoefficient(selected);
   for (const divValue of elementsHtml.keys()) {
     let element = elementsHtml.get(divValue);
-    element.style.visibility = "visible";
+    element.style.visibility = 'visible';
   }
 };
-mainEventEmitter.on("addHTMLobjects", addChanges);
-const specialFunctionsptions = ["trigonometric", "inverse", "degree", "log"];
+mainEventEmitter.on('addHTMLobjects', addChanges);
+const specialFunctionsptions = ['trigonometric', 'inverse', 'degree', 'log'];
 function drawAllParts() {
-  const type = document.getElementById("select").value;
+  const type = document.getElementById('select').value;
   const coefficients = receiveCoeff(type);
   chooseDrawFunction(coefficients, type);
 }
-const stack = new Stack();
 function chooseDrawFunction(coefficients, type) {
   const grapf = chooseEquationType(type, coefficients);
   grapf.clearCanvas(ctx);
@@ -94,7 +82,7 @@ const drawEquation = (classEquation) => {
     classEquation.drawFullGraf(x, ctx, divsValues[0]);
   }
 };
-mainEventEmitter.on("drawAllParts", drawAllParts);
+mainEventEmitter.on('drawAllParts', drawAllParts);
 function drawPreviousGrapf() {
   const funcInfo = stack.getFromMemory();
   console.log(funcInfo.funcType);
@@ -102,4 +90,17 @@ function drawPreviousGrapf() {
   console.log(grapf);
   drawEquation(grapf);
 }
-mainEventEmitter.on("drawPreviousGrapf", drawPreviousGrapf);
+mainEventEmitter.on('drawPreviousGrapf', drawPreviousGrapf);
+window.onload = () => {
+  const select = document.getElementById('select');
+  select.onchange = () =>
+    (function () {
+      mainEventEmitter.emit('addHTMLobjects', elementsHtml);
+    })();
+  const buildButton = document.getElementById('buildGrapf');
+  buildButton.onclick = () => mainEventEmitter.emit('drawAllParts', null);
+  const prevDrawButton = document.getElementById('showPreviousGrapf');
+  prevDrawButton.onclick = () => mainEventEmitter.emit('drawPreviousGrapf', null);
+  const clearButton = document.getElementById('clearCanvas'); 
+  clearButton.onclick = () => ctx.clearRect(0, 0, axes.xMax, axes.yMax); 
+};

@@ -15,7 +15,7 @@ class Stack {
     this.counter++;
   }
   getFromMemory() {
-    if (this.counter === 1) throw new Error("All your grapfs are on page or you havent painted any yet!");
+    if (this.counter === 1) throw new Error('All your grapfs are on page or you havent painted any yet!');
     const previousFunc = this.cache.get(this.keys[this.counter - 2]);
     --this.counter;
     this.cache.delete(this.keys[this.counter]);

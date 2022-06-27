@@ -1,11 +1,11 @@
 const addCoefficient = (selected) => {
-  let toPaste = document.getElementById("toPaste");
-  let toDelete = document.getElementById("pasted");
+  let toPaste = document.getElementById('toPaste');
+  let toDelete = document.getElementById('pasted');
   let selectedValue = selected.value;
   if (toDelete !== null) {
     toDelete.remove();
   }
-  let form = document.createElement("div");
+  let form = document.createElement('div');
   form.innerHTML = innerHTMLvalues[selectedValue];
   toPaste.append(form);
 };
@@ -122,37 +122,37 @@ const innerHTMLvalues = {
 
 const coeffsByTypes = {
   linear: {
-    k: "kLin",
-    b: "bLin",
+    k: 'kLin',
+    b: 'bLin',
   },
   quadratic: {
-    a: "aQuad",
-    b: "bQuad",
-    c: "cQuad",
+    a: 'aQuad',
+    b: 'bQuad',
+    c: 'cQuad',
   },
   inverse: {
-    k: "kInverse",
-    b: "bInverse",
+    k: 'kInverse',
+    b: 'bInverse',
   },
   log: {
-    a: "aLog",
-    b: "bLog",
-    k: "kLog",
+    a: 'aLog',
+    b: 'bLog',
+    k: 'kLog',
   },
   exponential: {
-    a: "aExponent",
-    k: "kExponent",
-    b: "bExponent",
+    a: 'aExponent',
+    k: 'kExponent',
+    b: 'bExponent',
   },
   degree: {
-    a: "aDegree",
-    k: "kDegree",
-    b: "bDegree",
+    a: 'aDegree',
+    k: 'kDegree',
+    b: 'bDegree',
   },
   trigonometric: {
-    k: "kTrigonom",
-    b: "bTrigonom",
-    a: "aTrigonom",
+    k: 'kTrigonom',
+    b: 'bTrigonom',
+    a: 'aTrigonom',
   },
 };
 const toNumber = (coefficients) => {
@@ -193,7 +193,6 @@ const calculators = {
     return Math.pow(x, coefficients.k) * coefficients.a + coefficients.b;
   },
   sin: (coefficients, x) => {
-    console.log(coefficients + "1");
     return coefficients.k * Math.sin(coefficients.b * x) + coefficients.a;
   },
   cos: (coefficients, x) => {
@@ -206,4 +205,5 @@ const calculators = {
     return coefficients.k * (1 / Math.tan(coefficients.b * x)) + coefficients.a;
   },
 };
+
 export { addCoefficient, calculators, receiveCoeff, innerHTMLvalues };
