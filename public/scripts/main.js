@@ -1,14 +1,8 @@
-
 import { receiveCoeff, addCoefficient } from "./functions.js";
-
 import { fabricUnusualFunc, StandartEquation } from "./classesForDrawing.js";
-
 import { Stack } from "./previous.js";
-
 import { EventEmitter } from "./eventEmmiter.js";
-
 const mainEventEmitter = new EventEmitter();
-
 window.onload = () => {
   const select = document.getElementById("select");
   select.onchange = () =>
@@ -18,8 +12,7 @@ window.onload = () => {
   const buildButton = document.getElementById("buildGrapf");
   buildButton.onclick = () => mainEventEmitter.emit("drawAllParts", null);
   const prevDrawButton = document.getElementById("showPreviousGrapf");
-  prevDrawButton.onclick = () =>
-    mainEventEmitter.emit("drawPreviousGrapf", null);
+  prevDrawButton.onclick = () => mainEventEmitter.emit("drawPreviousGrapf", null);
   const clearButton = document.getElementById("clearCanvas"); 
   clearButton.onclick = () => ctx.clearRect(0, 0, axes.xMax, axes.yMax); 
 };
@@ -32,7 +25,6 @@ const axes = {
   xMax: canvas.width,
   yMax: canvas.height,
 };
-
 const hidenHTMLelements = {
   scale: "scale",
   grapfColor: "grapfColor",
@@ -52,15 +44,14 @@ const getHTMLelements = () => {
   }
   return divsToAdd;
 };
-
+const amountOfCharactersstics = 3; 
 const elementsHtml = getHTMLelements();
-
 const receiveHtmlValues = (arr) => {
   const divs = [];
   for (const divValue of arr.keys()) {
     let element = arr.get(divValue);
     divs.push(element.value);
-    if (divs.length === 3) return divs;
+    if (divs.length === amountOfCharactersstics) return divs;
   }
 };
 const addChanges = (elementsHtml) => {
@@ -71,18 +62,14 @@ const addChanges = (elementsHtml) => {
     element.style.visibility = "visible";
   }
 };
-
 mainEventEmitter.on("addHTMLobjects", addChanges);
-const exceptions = ["trigonometric", "inverse", "degree", "log"];
-
+const specialFunctionsptions = ["trigonometric", "inverse", "degree", "log"];
 function drawAllParts() {
   const type = document.getElementById("select").value;
   const coefficients = receiveCoeff(type);
   chooseDrawFunction(coefficients, type);
 }
-
 const stack = new Stack();
-
 function chooseDrawFunction(coefficients, type) {
   const grapf = chooseEquationType(type, coefficients);
   grapf.clearCanvas(ctx);
@@ -92,14 +79,13 @@ function chooseDrawFunction(coefficients, type) {
 }
 const chooseEquationType = (type, coefficients) => {
   let drawedFunction;
-  if (exceptions.includes(type)) {
+  if (specialFunctionsptions.includes(type)) {
     drawedFunction = fabricUnusualFunc(type, coefficients, axes);
   } else {
     drawedFunction = new StandartEquation(axes, coefficients, type);
   }
   return drawedFunction;
 };
-
 const drawEquation = (classEquation) => {
   const divsValues = receiveHtmlValues(elementsHtml);
   ctx.beginPath(); 
@@ -108,9 +94,7 @@ const drawEquation = (classEquation) => {
     classEquation.drawFullGraf(x, ctx, divsValues[0]);
   }
 };
-
 mainEventEmitter.on("drawAllParts", drawAllParts);
-
 function drawPreviousGrapf() {
   const funcInfo = stack.getFromMemory();
   console.log(funcInfo.funcType);
@@ -118,5 +102,4 @@ function drawPreviousGrapf() {
   console.log(grapf);
   drawEquation(grapf);
 }
-
 mainEventEmitter.on("drawPreviousGrapf", drawPreviousGrapf);
